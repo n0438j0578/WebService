@@ -1,0 +1,30 @@
+#############################################################################
+[logging]
+
+# Options from least to most verbose: ERROR, WARN, INFO, TRACE
+level=TRACE
+
+# Write out log into the stderr or stdout or file(file:test.log)
+path=stderr
+
+#############################################################################
+[mongodbstore]
+
+# MongoDB URI, e.g. 127.0.0.1:27017,mongodb://root:qwer1234@localhost/admin
+mongo.uri=127.0.0.1:27017
+
+# MongoDB database, e.g. Reservation
+mongo.db=Reservation
+
+#############################################################################
+[http]
+
+address=:11000
+
+domain=http://localhost:11000
+
+cert=
+
+key=
+
+sessionTime=64800
