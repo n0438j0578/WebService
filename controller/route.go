@@ -43,6 +43,7 @@ func api(router *gin.Engine) {
 
 	api.GET("/exampleeeeeeeeee", GetExample)
 	api.POST("/", PostExample)
+	api.POST("/word", Word)
 
 }
 
