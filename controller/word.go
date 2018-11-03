@@ -32,7 +32,7 @@ func Word(context *gin.Context) {
 		name :=""
 		test:="http://35.240.208.104/WebProject/food/"
 		for i:=1;i< (len(input)-2);  i++{
-				test+=input[i]+" "
+				test+=input[i]+"%20"
 				name +=input[i]+" "
 
 		}
