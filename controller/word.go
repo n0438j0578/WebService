@@ -15,7 +15,7 @@ func Word(context *gin.Context) {
 	var response struct {
 		Status        string `json:",omitempty"` //"success | error | inactive"
 		StatusMessage string `json:",omitempty"`
-		Answer       model.Answer
+		Answer        model.Answer
 	}
 	err := context.BindJSON(&request)
 	if err != nil {
@@ -24,21 +24,47 @@ func Word(context *gin.Context) {
 		context.JSON(http.StatusInternalServerError, response)
 		return
 	}
+
+	ans :=model.Answer{}
+
 	input := strings.Split(request.Text, " ")
-	fmt.Println(input[1])
-	test := "http://35.240.208.104/WebProject/food/"+input[1]+".jpg"
+	if (len(input) > 3) {
+		name :=""
+		test:="http://35.240.208.104/WebProject/food/"
+		for i:=1;i< (len(input)-2);  i++{
+			if(i==len(input)-3){
+				test+=input[i]
+				name+=input[i]
+			}else{
+				test+=input[i]+" "
+				name +=input[i]+" "
+			}
+		}
+		test += input[len(input)-2]+".jpg"
+		fmt.Println(test)
+		ans = model.Answer{
+			name,
+			test,
+			"",
+		}
 
-	fmt.Println(test)
+	} else {
+		fmt.Println(input[1])
+		test := "http://35.240.208.104/WebProject/food/" + input[1] + ".jpg"
 
-	ans := model.Answer{
-		input[1],
-		test,
-		"",
+		fmt.Println(test)
+
+		ans = model.Answer{
+			input[1],
+			test,
+			"",
+		}
 	}
+
+	//input := strings.Split(request.Text, " ")
 
 	response.Status = "success"
 	response.StatusMessage = "Insert example"
-	response.Answer= ans
+	response.Answer = ans
 	context.JSON(http.StatusOK, response)
 }
-
