@@ -61,7 +61,6 @@ func Word(context *gin.Context) {
 	//input := strings.Split(request.Text, " ")
 
 	response.Status = "success"
-	response.StatusMessage = "Insert example"
 	response.Answer = ans
 	context.JSON(http.StatusOK, response)
 }
