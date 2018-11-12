@@ -30,7 +30,7 @@ func Word(context *gin.Context) {
 	input := strings.Split(request.Text, " ")
 	if (len(input) > 3) {
 		name :=""
-		test:="http://35.241.81.157/WebProject/img/"
+		test:="http://35.220.204.174/WebProject/img/"
 		for i:=1;i< (len(input)-2);  i++{
 				test+=input[i]+"%20"
 				name +=input[i]+" "
@@ -47,7 +47,7 @@ func Word(context *gin.Context) {
 
 	} else {
 		fmt.Println(input[1])
-		test := "http://35.241.81.157/WebProject/img/" + input[1] + ".jpg"
+		test := "http://35.220.204.174/WebProject/img/" + input[1] + ".jpg"
 
 		fmt.Println(test)
 
