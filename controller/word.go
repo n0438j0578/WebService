@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strings"
 	"context"
-	"database/sql"
 )
 var ctx = context.Background()
 
@@ -49,27 +48,27 @@ func Word(context *gin.Context) {
 		type Tag struct {
 			Amount string `json:"amount"`
 		}
-		var tag Tag
-
-		db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
-		if err != nil {
-			panic(err.Error())
-		}
-		defer db.Close()
-		//SELECT * FROM Customers
-		//WHERE Country='Mexico';
-
-		insert, err := db.QueryContext(ctx,"SELECT amount FROM menu WHERE name='?'",name)
-		err = insert.Scan(&tag.Amount)
-		rawText := "ตอนนี้เหลือ "+tag.Amount
-
-		defer insert.Close()
+		//var tag Tag
+		//
+		//db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+		//if err != nil {
+		//	panic(err.Error())
+		//}
+		//defer db.Close()
+		////SELECT * FROM Customers
+		////WHERE Country='Mexico';
+		//
+		//insert, err := db.QueryContext(ctx,"SELECT amount FROM menu WHERE name='?'",name)
+		//err = insert.Scan(&tag.Amount)
+		//rawText := "ตอนนี้เหลือ "+tag.Amount
+		//
+		//defer insert.Close()
 
 		ans = model.Answer{
 			name,
 			test,
 			"",
-			rawText,
+			"",
 		}
 
 	} else {
@@ -81,27 +80,27 @@ func Word(context *gin.Context) {
 		type Tag struct {
 			Amount string `json:"amount"`
 		}
-		var tag Tag
-
-		db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
-		if err != nil {
-			panic(err.Error())
-		}
-		defer db.Close()
-		//SELECT * FROM Customers
-		//WHERE Country='Mexico';
-
-		insert, err := db.QueryContext(ctx,"SELECT amount FROM menu WHERE name='?'",test)
-		err = insert.Scan(&tag.Amount)
-		rawText := "ตอนนี้เหลือ "+tag.Amount
-
-		defer insert.Close()
+		//var tag Tag
+		//
+		//db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+		//if err != nil {
+		//	panic(err.Error())
+		//}
+		//defer db.Close()
+		////SELECT * FROM Customers
+		////WHERE Country='Mexico';
+		//
+		//insert, err := db.QueryContext(ctx,"SELECT amount FROM menu WHERE name='?'",test)
+		//err = insert.Scan(&tag.Amount)
+		//rawText := "ตอนนี้เหลือ "+tag.Amount
+		//
+		//defer insert.Close()
 
 		ans = model.Answer{
 			input[1],
 			test,
 			"",
-			rawText,
+			"",
 		}
 	}
 
