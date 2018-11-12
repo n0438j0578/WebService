@@ -59,7 +59,7 @@ func Word(context *gin.Context) {
 		//SELECT * FROM Customers
 		//WHERE Country='Mexico';
 
-		insert, err := db.QueryContext(ctx,"SELECT amount FROM menu WHERE name='?'",test)
+		insert, err := db.QueryContext(ctx,"SELECT amount FROM menu WHERE name='?'",name)
 		err = insert.Scan(&tag.Amount)
 		rawText := "ตอนนี้เหลือ "+tag.Amount
 
