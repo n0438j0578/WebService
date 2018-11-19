@@ -14,7 +14,6 @@ type Tag struct {
 	Des string `json:"des"`
 }
 func main() {
-	//fmt.Println("Go MySQL Tutorial")
 	db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
 	if err != nil {
 		panic(err.Error())
