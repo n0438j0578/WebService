@@ -158,7 +158,7 @@ func Word(context *gin.Context) {
 		//	//fmt.Println(tag.Des)
 		//	amount =tag.Amount
 		//}
-		text := strconv.Itoa(amount)
+		text := "ของเหลืออยู่ "+ strconv.Itoa(amount)
 		ans = model.Answer{
 			"เหลือไหม",
 			name,
