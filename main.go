@@ -15,7 +15,7 @@ import (
 	"WebService/log"
 )
 
-const TAG = "Primes"
+const TAG = "WebService"
 
 var (
 	VERSION    = "0.0.1"
