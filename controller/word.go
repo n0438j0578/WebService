@@ -11,6 +11,8 @@ import (
 	"fmt"
 	"database/sql"
 	"strconv"
+	"github.com/narongdejsrn/go-thaiwordcut"
+	"log"
 )
 
 var ctx = context.Background()
@@ -25,8 +27,8 @@ func Word(context *gin.Context) {
 		Answer        model.Answer
 	}
 	err := context.BindJSON(&request)
-	fmt.Println(request.Idcustomer)
-	fmt.Println(request.Text)
+	//fmt.Println(request.Idcustomer)
+	//fmt.Println(request.Text)
 	if err != nil {
 		response.Status = "error"
 		response.StatusMessage = err.Error()
@@ -38,7 +40,75 @@ func Word(context *gin.Context) {
 
 	input := strings.Split(request.Text, " ")
 
-	if (strings.Compare(input[0], "มี") == 0 || strings.Compare(input[len(input)-1], "ไหม") == 0) {
+
+	//เริ่มทำการตรวจสอบว่าเข้ากรณีจะสั่งสินค้าหรือไม่ ?
+	segmenter := gothaiwordcut.Wordcut()
+	segmenter.LoadDefaultDict()
+	msg := segmenter.Segment(request.Text)
+	count:=0
+	for i:=0;i< len(msg);i++  {
+		if(strings.Compare(msg[i], "เอา") == 0 ||strings.Compare(msg[i], "ชิ้น") == 0){
+			count++;
+		}
+	}
+
+
+
+	if(count>1){
+		db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+		if err != nil {
+			panic(err.Error())
+		}
+		defer db.Close()
+		type Tag struct {
+			msg   string
+		}
+
+		var tag Tag
+
+	//	err = db.QueryRow("SELECT amount,id FROM menu WHERE name=?", name).Scan(&tag.Amount,&tag.ID)
+		err = db.QueryRow("SELECT msg FROM oldmsg WHERE id=?", request.Idcustomer).Scan(&tag.msg)
+
+		text :=strings.Split(tag.msg, " ")
+		if (strings.Compare(text[0], "มี") == 0 || strings.Compare(text[len(input)-1], "ไหม") == 0){
+
+			test :="----------------------------/nNJ Modem & Router/n----------------------------/nรายการสินค้า/nAsus a550      X1               2000 บาท/nรวม : 2000   บาท/n----------------------------"
+			ans = model.Answer{
+				"คำถามต่อเนื่อง",
+				test,
+				"",
+				"",
+				"",
+			}
+			tx, _ := db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+			_, execErr := tx.ExecContext(ctx, "INSERT INTO oldmsg (id,msg) VALUES (?,?)",request.Idcustomer,request.Text)
+			if execErr != nil {
+				if rollbackErr := tx.Rollback(); rollbackErr != nil {
+					log.Printf("Could not roll back: %v\n", rollbackErr)
+				}
+				insForm, err := db.Prepare("UPDATE oldmsg SET msg=? WHERE id=?")
+				if err != nil {
+					panic(err.Error())
+				}
+				insForm.Exec(request.Text, request.Idcustomer)
+				defer db.Close()
+			}
+			if err := tx.Commit(); err != nil {
+				//log.Fatal(err)
+				//	log.Printf("Could not roll back: %v\n")
+			}
+		}else{
+			ans = model.Answer{
+				"ไม่เข้าพวก",
+				"ไม่ทราบจ้า",
+				"",
+				"",
+				"",
+			}
+		}
+
+
+	} else if (strings.Compare(input[0], "มี") == 0 || strings.Compare(input[len(input)-1], "ไหม") == 0) {
 		if (len(input) > 3) {
 			name := ""
 			test := "http://35.220.204.174/WebProject/img/"
@@ -54,21 +124,7 @@ func Word(context *gin.Context) {
 			type Tag struct {
 				Amount string `json:"amount"`
 			}
-			//var tag Tag
-			//
-			//db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
-			//if err != nil {
-			//	panic(err.Error())
-			//}
-			//defer db.Close()
-			////SELECT * FROM Customers
-			////WHERE Country='Mexico';
-			//
-			//insert, err := db.QueryContext(ctx,"SELECT amount FROM menu WHERE name='?'",name)
-			//err = insert.Scan(&tag.Amount)
-			//rawText := "ตอนนี้เหลือ "+tag.Amount
-			//
-			//defer insert.Close()
+
 
 			ans = model.Answer{
 				"มีของไหม",
@@ -77,6 +133,30 @@ func Word(context *gin.Context) {
 				"",
 				"",
 			}
+			db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+			if err != nil {
+				panic(err.Error())
+			}
+			defer db.Close()
+			tx, err := db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+			_, execErr := tx.ExecContext(ctx, "INSERT INTO oldmsg (id,msg) VALUES (?,?)",request.Idcustomer,request.Text)
+			if execErr != nil {
+				if rollbackErr := tx.Rollback(); rollbackErr != nil {
+					log.Printf("Could not roll back: %v\n", rollbackErr)
+				}
+				insForm, err := db.Prepare("UPDATE oldmsg SET msg=? WHERE id=?")
+				if err != nil {
+					panic(err.Error())
+				}
+				insForm.Exec(request.Text, request.Idcustomer)
+				defer db.Close()
+			}
+			if err := tx.Commit(); err != nil {
+				//log.Fatal(err)
+			//	log.Printf("Could not roll back: %v\n")
+			}
+
+
 
 		} else {
 			fmt.Println(input[1])
@@ -109,6 +189,28 @@ func Word(context *gin.Context) {
 				test,
 				"",
 				"",
+			}
+			db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+			if err != nil {
+				panic(err.Error())
+			}
+			defer db.Close()
+			tx, err := db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+			_, execErr := tx.ExecContext(ctx, "INSERT INTO oldmsg (id,msg) VALUES (?,?)",request.Idcustomer,request.Text)
+			if execErr != nil {
+				if rollbackErr := tx.Rollback(); rollbackErr != nil {
+					log.Printf("Could not roll back: %v\n", rollbackErr)
+				}
+				insForm, err := db.Prepare("UPDATE oldmsg SET msg=? WHERE id=?")
+				if err != nil {
+					panic(err.Error())
+				}
+				insForm.Exec(request.Text, request.Idcustomer)
+				defer db.Close()
+			}
+			if err := tx.Commit(); err != nil {
+				//log.Fatal(err)
+				//	log.Printf("Could not roll back: %v\n")
 			}
 		}
 
@@ -176,6 +278,28 @@ func Word(context *gin.Context) {
 			"",
 			"",
 			"",
+		}
+		db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+		if err != nil {
+			panic(err.Error())
+		}
+		defer db.Close()
+		tx, err := db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+		_, execErr := tx.ExecContext(ctx, "INSERT INTO oldmsg (id,msg) VALUES (?,?)",request.Idcustomer,request.Text)
+		if execErr != nil {
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				log.Printf("Could not roll back: %v\n", rollbackErr)
+			}
+			insForm, err := db.Prepare("UPDATE oldmsg SET msg=? WHERE id=?")
+			if err != nil {
+				panic(err.Error())
+			}
+			insForm.Exec(request.Text, request.Idcustomer)
+			defer db.Close()
+		}
+		if err := tx.Commit(); err != nil {
+			//log.Fatal(err)
+			//	log.Printf("Could not roll back: %v\n")
 		}
 
 	}
