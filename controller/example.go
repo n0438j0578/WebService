@@ -34,6 +34,8 @@ func GetExample(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, response)
 		return
 	}
+	cookie1 := &http.Cookie{Name: "sample", Value: "sample", HttpOnly: false}
+	http.SetCookie(context.Writer, cookie1)
 	response.Status = "success"
 	response.StatusMessage = ""
 	response.Example = example
