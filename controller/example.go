@@ -31,7 +31,7 @@ func GetExample(context *gin.Context) {
 	fmt.Printf("Query %+v\n" ,request)
 	example, err := ds.Mongo.FindExample(request.Id)
 	if err != nil {
-		cookie1 := &http.Cookie{Name: "sample", Value: "sample",Expires:time.Now(), HttpOnly: false}
+		cookie1 := &http.Cookie{Name: "samplaaaaae", Value: "sample",Expires:time.Now(), HttpOnly: false}
 		http.SetCookie(context.Writer, cookie1)
 		response.Status = "error"
 		context.JSON(http.StatusBadRequest, response)
