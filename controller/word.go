@@ -19,6 +19,7 @@ func Word(context *gin.Context) {
 	var request struct {
 		*model.Word
 	}
+	fmt.Println(request.Idcustomer)
 	var response struct {
 		Status        string `json:",omitempty"` //"success | error | inactive"
 		StatusMessage string `json:",omitempty"`
