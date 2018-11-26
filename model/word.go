@@ -2,7 +2,7 @@
 package model
 
 type Word struct {
-	Idcustomer int
+	Idcustomer string
 	Text string
 }
 

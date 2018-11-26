@@ -19,13 +19,14 @@ func Word(context *gin.Context) {
 	var request struct {
 		*model.Word
 	}
-	fmt.Println(request.Idcustomer)
 	var response struct {
 		Status        string `json:",omitempty"` //"success | error | inactive"
 		StatusMessage string `json:",omitempty"`
 		Answer        model.Answer
 	}
 	err := context.BindJSON(&request)
+	fmt.Println(request.Idcustomer)
+	fmt.Println(request.Text)
 	if err != nil {
 		response.Status = "error"
 		response.StatusMessage = err.Error()
