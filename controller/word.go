@@ -275,7 +275,7 @@ func Word(context *gin.Context) {
 	}else{
 		ans = model.Answer{
 			"ไม่เข้าพวก",
-			"ไม่ทราบจ้า",
+			"รอสักครู่นะคะ",
 			"",
 			"",
 			"",
