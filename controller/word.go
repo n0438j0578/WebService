@@ -72,7 +72,7 @@ func Word(context *gin.Context) {
 		text :=strings.Split(tag.msg, " ")
 		if (strings.Compare(text[0], "มี") == 0 || strings.Compare(text[len(input)-1], "ไหม") == 0){
 
-			test :="----------------------------\n"+"NJ Modem & Router\n"+"----------------------------\n"+"รายการสินค้า\n"+"Asus a550      X1               2000 บาท\n"+"รวม : 2000   บาท\n----------------------------"
+			test :="----------------------------\n"+"NJ Modem & Router\n"+"----------------------------\n"+"รายการสินค้า\n"+"ASUS Dual-band Wireless-AC1200 router RT-AC1200G+      X1               2000 บาท\n"+"รวม : 2000   บาท\n----------------------------"
 
 			ans = model.Answer{
 				"คำถามต่อเนื่อง",
