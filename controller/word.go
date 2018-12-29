@@ -1,18 +1,16 @@
 package controller
 
-//aa
 import (
 	"WebService/model"
+	"context"
+	"database/sql"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	"net/http"
-	"strings"
-	"context"
-	"fmt"
-	"database/sql"
-	"strconv"
 	"github.com/narongdejsrn/go-thaiwordcut"
 	"log"
+	"net/http"
+	"strconv"
+	"strings"
 )
 
 var ctx = context.Background()
@@ -118,7 +116,7 @@ func Word(context *gin.Context) {
 			}
 			test += input[len(input)-2] + ".jpg"
 			name += input[len(input)-2]
-			fmt.Println(test)
+			//fmt.Println(test)
 
 			type Tag struct {
 				Amount string `json:"amount"`
@@ -158,10 +156,10 @@ func Word(context *gin.Context) {
 
 
 		} else {
-			fmt.Println(input[1])
+			//fmt.Println(input[1])
 			test := "http://35.220.204.174/WebProject/img/" + input[1] + ".jpg"
 
-			fmt.Println(test)
+			//fmt.Println(test)
 
 			type Tag struct {
 				Amount string `json:"amount"`
@@ -236,7 +234,7 @@ func Word(context *gin.Context) {
 			}
 		}
 
-		fmt.Println(name)
+		//fmt.Println(name)
 
 
 		type Tag struct {
