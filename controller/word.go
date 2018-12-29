@@ -17,6 +17,8 @@ import (
 
 var ctx = context.Background()
 
+const DATABASE  = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
+
 func Word(context *gin.Context) {
 	var request struct {
 		*model.Word
@@ -27,8 +29,6 @@ func Word(context *gin.Context) {
 		Answer        model.Answer
 	}
 	err := context.BindJSON(&request)
-	//fmt.Println(request.Idcustomer)
-	//fmt.Println(request.Text)
 	if err != nil {
 		response.Status = "error"
 		response.StatusMessage = err.Error()
@@ -40,8 +40,6 @@ func Word(context *gin.Context) {
 
 	input := strings.Split(request.Text, " ")
 
-
-	//เริ่มทำการตรวจสอบว่าเข้ากรณีจะสั่งสินค้าหรือไม่ ?
 	segmenter := gothaiwordcut.Wordcut()
 	segmenter.LoadDefaultDict()
 	msg := segmenter.Segment(request.Text)
@@ -55,7 +53,7 @@ func Word(context *gin.Context) {
 
 
 	if(count>1){
-		db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+		db, err := sql.Open("mysql", DATABASE)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -134,7 +132,7 @@ func Word(context *gin.Context) {
 				"",
 				"",
 			}
-			db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+			db, err := sql.Open("mysql", DATABASE)
 			if err != nil {
 				panic(err.Error())
 			}
@@ -191,7 +189,7 @@ func Word(context *gin.Context) {
 				"",
 				"",
 			}
-			db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+			db, err := sql.Open("mysql", DATABASE)
 			if err != nil {
 				panic(err.Error())
 			}
@@ -218,7 +216,7 @@ func Word(context *gin.Context) {
 		//input := strings.Split(request.Text, " ")
 	} else if (strings.Compare(input[len(input)-1], "เหลือไหม") == 0) {
 
-		db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+		db, err := sql.Open("mysql", DATABASE)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -280,7 +278,7 @@ func Word(context *gin.Context) {
 			"",
 			"",
 		}
-		db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+		db, err := sql.Open("mysql", DATABASE)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -299,8 +297,6 @@ func Word(context *gin.Context) {
 			defer db.Close()
 		}
 		if err := tx.Commit(); err != nil {
-			//log.Fatal(err)
-			//	log.Printf("Could not roll back: %v\n")
 		}
 
 	}
