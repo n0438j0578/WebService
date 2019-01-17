@@ -62,7 +62,7 @@ func main(){
 	}
 	defer db.Close()
 
-	rows, _ := db.Query("SELECT * FROM menu")
+	rows, _ := db.Query("SELECT greeting ,problem ,orders ,search,type  FROM collections")
 
 	err = sqltocsv.WriteFile("./program/report.csv", rows)
 
