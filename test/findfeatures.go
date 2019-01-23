@@ -35,7 +35,7 @@ func main() {
 		rawText+=tag.Des
 	}
 
-	
+
 
 	fmt.Println(rawText)
 	fmt.Println()
