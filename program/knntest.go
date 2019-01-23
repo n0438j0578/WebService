@@ -1,13 +1,13 @@
 package main
 
 import (
-	"math"
-	"sort"
-	"os"
 	"encoding/csv"
-	"io"
-	"strconv"
 	"fmt"
+	"io"
+	"math"
+	"os"
+	"sort"
+	"strconv"
 )
 
 func main() {

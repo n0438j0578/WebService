@@ -12,7 +12,7 @@ import (
 )
 
 
-func PopLine(f *os.File) ([]byte, error) {
+func popLine(f *os.File) ([]byte, error) {
 	fi, err := f.Stat()
 	if err != nil {
 		return nil, err
