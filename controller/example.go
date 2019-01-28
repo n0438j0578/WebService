@@ -54,3 +54,39 @@ func Example(context *gin.Context) {
 		context.JSON(http.StatusOK, response)
 	}
 }
+func ExampleFindOneByOne(context *gin.Context) {
+	var request struct {
+		*model.Example
+	}
+	var response struct {
+		Status        string `json:",omitempty"` //"success | error | inactive"
+		StatusMessage string `json:",omitempty"`
+		Result string
+	}
+	err := context.BindJSON(&request)
+
+	if err != nil {
+		response.Status = "error"
+		response.StatusMessage = err.Error()
+		context.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+
+
+	result := test.TestAll()
+
+	//result:= test.TestoneByone(5)
+
+	if result ==1{
+		response.Status = "success"
+		response.StatusMessage = "Insert example"
+		response.Result=request.Value
+		context.JSON(http.StatusOK, response)
+	}else{
+		response.Status = "failed"
+		response.StatusMessage = "Insert example"
+		response.Result=request.Value
+		context.JSON(http.StatusOK, response)
+	}
+}

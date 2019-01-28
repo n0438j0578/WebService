@@ -12,6 +12,7 @@ func main() {
 	api.POST("/word", controller.Word)
 	api.GET("/findfeature", controller.FindFeature)
 	api.POST("/example", controller.Example)
+	api.POST("/test",controller.ExampleFindOneByOne)
 	gin.Run(":20000")
 
 }
