@@ -107,9 +107,8 @@ func TestoneByone(index int,wg *sync.WaitGroup) int {
 	orders := 0
 	search := 0
 
+
 	for i := 0; i < len(res); i++ {
-
-
 
 		if (findfeaturesonebyone(res[i],"greeting") == 1) {
 			greeting++
@@ -154,16 +153,11 @@ func findfeaturesonebyone(input string,types string) int {
 		if err != nil {
 			panic(err.Error())
 		}
-		//fmt.Println(tag.Des)
 		rawText += tag.Feature
 	}
 
-	//s := strings.Split("127.0.0.1:5432", ":")
-	//ip, port := s[0], s[1]
-	//fmt.Println(ip, port)
 
 	cut := strings.Split(rawText, " ")
-	//fmt.Println(cut)
 
 
 	check:=0
