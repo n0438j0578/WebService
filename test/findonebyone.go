@@ -31,10 +31,17 @@ func TestAll() int {
 		}
 		test = append(test, tag.id)
 	}
+
+
+	featuregreeting := selectfeature("greeting")
+	featureproblem := selectfeature("problem")
+	featureorders := selectfeature("orders")
+	featuresearch := selectfeature("search")
+
 	var wg sync.WaitGroup
 	wg.Add(len(test))
 	for _, index := range test {
-		go TestoneByone(index, &wg)
+		go TestoneByone(index, &wg,featuregreeting,featureproblem,featureorders,featuresearch)
 	}
 	wg.Wait()
 
@@ -45,7 +52,7 @@ func TestAll() int {
 	}
 
 }
-func TestoneByone(index int, wg *sync.WaitGroup) int {
+func TestoneByone(index int, wg *sync.WaitGroup,featuregreeting []string,featureproblem []string,featureorders []string,featuresearch []string) int {
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
 		panic(err.Error())
@@ -88,11 +95,6 @@ func TestoneByone(index int, wg *sync.WaitGroup) int {
 	problem := 0
 	orders := 0
 	search := 0
-
-	featuregreeting := selectfeature("greeting")
-	featureproblem := selectfeature("problem")
-	featureorders := selectfeature("orders")
-	featuresearch := selectfeature("search")
 
 	for i := 0; i < len(res); i++ {
 
