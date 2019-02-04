@@ -10,6 +10,7 @@ func main() {
 	gin:=gin.Default()
 	api := gin.Group("/api")
 	api.POST("/word", controller.Word)
+	api.POST("/wordset", controller.WordSet)
 	api.GET("/findfeature", controller.FindFeature)
 	api.POST("/example", controller.Example)
 	api.POST("/test",controller.ExampleFindOneByOne)

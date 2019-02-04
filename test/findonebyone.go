@@ -33,10 +33,10 @@ func TestAll() int {
 	}
 
 
-	featuregreeting := selectfeature("greeting")
-	featureproblem := selectfeature("problem")
-	featureorders := selectfeature("orders")
-	featuresearch := selectfeature("search")
+	featuregreeting := Selectfeature("greeting")
+	featureproblem := Selectfeature("problem")
+	featureorders := Selectfeature("orders")
+	featuresearch := Selectfeature("search")
 
 	var wg sync.WaitGroup
 	wg.Add(len(test))
@@ -98,16 +98,16 @@ func TestoneByone(index int, wg *sync.WaitGroup,featuregreeting []string,feature
 
 	for i := 0; i < len(res); i++ {
 
-		if findfeaturesonebyone(res[i], featuregreeting) == 1 {
+		if Findfeaturesonebyone(res[i], featuregreeting) == 1 {
 			greeting++
 		}
-		if findfeaturesonebyone(res[i], featureproblem) == 1 {
+		if Findfeaturesonebyone(res[i], featureproblem) == 1 {
 			problem++
 		}
-		if findfeaturesonebyone(res[i], featureorders) == 1 {
+		if Findfeaturesonebyone(res[i], featureorders) == 1 {
 			orders++
 		}
-		if findfeaturesonebyone(res[i], featuresearch) == 1 {
+		if Findfeaturesonebyone(res[i], featuresearch) == 1 {
 			search++
 		}
 	}
@@ -124,7 +124,7 @@ func TestoneByone(index int, wg *sync.WaitGroup,featuregreeting []string,feature
 	return 1
 
 }
-func findfeaturesonebyone(input string, cut []string) int {
+func Findfeaturesonebyone(input string, cut []string) int {
 
 	check := 2
 	for i := 0; i < len(cut); i++ {
@@ -138,7 +138,7 @@ func findfeaturesonebyone(input string, cut []string) int {
 
 }
 
-func selectfeature(types string) []string {
+func Selectfeature(types string) []string {
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
 		panic(err.Error())
