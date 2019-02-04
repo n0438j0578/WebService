@@ -4,7 +4,8 @@ import (
 	"WebService/test"
 	"database/sql"
 	"fmt"
-	"github.com/narongdejsrn/go-thaiwordcut"
+
+	gothaiwordcut "github.com/narongdejsrn/go-thaiwordcut"
 )
 
 type Id struct {
@@ -14,10 +15,10 @@ type Id struct {
 type Tag struct {
 	Feature string `json:"des"`
 }
-const DATABASE  = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
 
+const DATABASE = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
 
-func WordSet(text string,types string,ans string) int {
+func WordSet(text string, types string, ans string) int {
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
 		panic(err.Error())
@@ -25,8 +26,6 @@ func WordSet(text string,types string,ans string) int {
 	defer db.Close()
 	//var ctx = context.Background()
 	//selectMessages, err := db.QueryContext(ctx, "INSERT INTO collections(message,types,answer) VALUES (?,?,?)", text,types)
-
-
 
 	segmenter := gothaiwordcut.Wordcut()
 	segmenter.LoadDefaultDict()
@@ -41,29 +40,31 @@ func WordSet(text string,types string,ans string) int {
 		result += res[i] + " "
 	}
 
-	insForm, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature) VALUES (?,?,?,?)")
+	insForm, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count) VALUES (?,?,?,?,?)")
 	if err != nil {
+		fmt.Print("Cutdata1 : ")
+		fmt.Println(res)
 		panic(err.Error())
 		return 0
 	}
-	_,err=insForm.Exec(text, types,ans,result)
+	_, err = insForm.Exec(text, types, ans, result, 0)
 	if err != nil {
+		//fmt.Print(text, types, ans, result)
 		return 0
 	}
 
 	num := test.Test(types)
-
 
 	//featuregreeting := test.Selectfeature("greeting")
 	//featureproblem := test.Selectfeature("problem")
 	//featureorders := test.Selectfeature("orders")
 	//featuresearch := test.Selectfeature("search")
 
-	if(num==0){
+	if num == 0 {
 		return 0
 	}
 	num = test.TestAll()
-	if(num==0){
+	if num == 0 {
 		return 0
 	}
 	//
@@ -94,16 +95,8 @@ func WordSet(text string,types string,ans string) int {
 	//}
 	//updateToFeatures.Exec(greeting, problem, orders, search, text)
 
-
-
 	return 1
 
-
-
-
-
-
 	//INSERT INTO `collections` (`message`, `greeting`, `problem`, `orders`, `search`, `types`, `answer`, `id`, `sub_feature`) VALUES ('', '0', '0', '0', '0', NULL, '', NULL, NULL)
-
 
 }
