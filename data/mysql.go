@@ -46,8 +46,10 @@ func WordSet(text string,types string,ans string) int {
 		panic(err.Error())
 		return 0
 	}
-	insForm.Exec(text, types,ans,result)
-
+	_,err=insForm.Exec(text, types,ans,result)
+	if err != nil {
+		return 0
+	}
 
 	num := test.Test(types)
 

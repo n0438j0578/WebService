@@ -22,7 +22,6 @@ func TestAll() int {
 	defer db.Close()
 	selectMessages, err := db.Query("SELECT id FROM collections ")
 	var test []int
-	test = append(test, 1)
 	for selectMessages.Next() {
 		var tag Id
 		err = selectMessages.Scan(&tag.id)
