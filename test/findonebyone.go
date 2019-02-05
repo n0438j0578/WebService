@@ -31,16 +31,15 @@ func TestAll() int {
 		test = append(test, tag.id)
 	}
 
-
 	featuregreeting := Selectfeature("greeting")
 	featureproblem := Selectfeature("problem")
-	featureorders := Selectfeature("orders")
+	featureorders := Selectfeature("order")
 	featuresearch := Selectfeature("search")
 
 	var wg sync.WaitGroup
 	wg.Add(len(test))
 	for _, index := range test {
-		go TestoneByone(index, &wg,featuregreeting,featureproblem,featureorders,featuresearch)
+		go TestoneByone(index, &wg, featuregreeting, featureproblem, featureorders, featuresearch)
 	}
 	wg.Wait()
 
@@ -51,7 +50,7 @@ func TestAll() int {
 	}
 
 }
-func TestoneByone(index int, wg *sync.WaitGroup,featuregreeting []string,featureproblem []string,featureorders []string,featuresearch []string) int {
+func TestoneByone(index int, wg *sync.WaitGroup, featuregreeting []string, featureproblem []string, featureorders []string, featuresearch []string) int {
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
 		panic(err.Error())
@@ -124,7 +123,6 @@ func TestoneByone(index int, wg *sync.WaitGroup,featuregreeting []string,feature
 
 }
 func Findfeaturesonebyone(input string, cut []string) int {
-
 	check := 2
 	for i := 0; i < len(cut); i++ {
 		check = strings.Compare(input, cut[i])
