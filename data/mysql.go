@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	gothaiwordcut "github.com/narongdejsrn/go-thaiwordcut"
+	"github.com/narongdejsrn/go-thaiwordcut"
 )
 
 type Id struct {
@@ -65,38 +65,61 @@ func WordSet(text string, types string, ans string) int {
 
 }
 
-func WordCome(text string, Idcustomer string) (int,string) {
-		db, err := sql.Open("mysql", DATABASE)
+func WordCome(text string, Idcustomer string) (int, string) {
+	db, err := sql.Open("mysql", DATABASE)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+	var ctx = context.Background()
+	fmt.Println(text)
+	selectMessages, err := db.QueryContext(ctx, "SELECT answer FROM collections WHERE message=?", text)
+	rawText := ""
+
+	for selectMessages.Next() {
+		var tag Tag
+		err = selectMessages.Scan(&tag.Feature)
 		if err != nil {
 			panic(err.Error())
 		}
-		defer db.Close()
-		var ctx = context.Background()
-		fmt.Println(text)
-		selectMessages, err := db.QueryContext(ctx, "SELECT answer FROM collections WHERE message=?",text)
-		//fmt.Println(selectMessages)
-		rawText :=""
-
-		for selectMessages.Next() {
-			var tag Tag
-			err = selectMessages.Scan(&tag.Feature)
-			if err != nil {
-				panic(err.Error())
-			}
-			rawText+=tag.Feature
-		}
-
-		if(strings.Compare(rawText,"")==0){
-			return 0,""
-		}else{
-			return 1, rawText
-		}
-
+		rawText += tag.Feature
 	}
 
+	if (strings.Compare(rawText, "") == 0) {
+		SaveWord(text,Idcustomer)
+		return 0, ""
+	} else {
+		SaveWord(text,Idcustomer)
+		return 1, rawText
+	}
 
+}
+func SaveWord(text string, Idcustomer string)  {
+	db, err := sql.Open("mysql", DATABASE)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+	var ctx = context.Background()
+	fmt.Println(text)
+	selectMessages, err := db.QueryContext(ctx, "SELECT message FROM oldmsg WHERE id=?", Idcustomer)
+	rawText := ""
 
+	for selectMessages.Next() {
+		var tag Tag
+		err = selectMessages.Scan(&tag.Feature)
+		if err != nil {
+			panic(err.Error())
+		}
+		rawText += tag.Feature
+	}
 
+	if (strings.Compare(rawText, "") == 0) {
+		insForm, _ := db.Prepare("INSERT INTO oldmsg(id,message) VALUES (?,?)")
+		_, err = insForm.Exec(Idcustomer, text)
+	} else {
+		insForm, _ := db.Prepare("UPDATE oldmsg SET message=? WHERE id=? ")
+		insForm.Exec(text, Idcustomer)
+	}
 
-
-
+}
