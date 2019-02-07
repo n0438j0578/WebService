@@ -72,7 +72,7 @@ func WordCome(text string, Idcustomer string) (int, string) {
 	}
 	defer db.Close()
 	var ctx = context.Background()
-	fmt.Println(text)
+	//fmt.Println(text)
 	selectMessages, err := db.QueryContext(ctx, "SELECT answer FROM collections WHERE message=?", text)
 	rawText := ""
 
