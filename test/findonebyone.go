@@ -110,7 +110,7 @@ func TestoneByone(index int, wg *sync.WaitGroup, featuregreeting []string, featu
 		}
 	}
 
-	updateToFeatures, err = db.Prepare("UPDATE collections SET greeting=?,problem=?,orders=?,search=? WHERE id=?")
+	updateToFeatures, err = db.Prepare("UPDATE collections SET greeting=?,problem=?,order=?,search=? WHERE id=?")
 	if err != nil {
 		panic(err.Error())
 		return 0
