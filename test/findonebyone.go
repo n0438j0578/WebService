@@ -58,6 +58,7 @@ func TestoneByone(index int, wg *sync.WaitGroup, featuregreeting []string, featu
 	defer db.Close()
 	var ctx = context.Background()
 	selectMessages, err := db.QueryContext(ctx, "SELECT message FROM collections WHERE id=?", index)
+	//fmt.Println(selectMessages)
 	rawText := ""
 
 	for selectMessages.Next() {

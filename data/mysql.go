@@ -2,8 +2,10 @@ package data
 
 import (
 	"WebService/test"
+	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	gothaiwordcut "github.com/narongdejsrn/go-thaiwordcut"
 )
@@ -24,8 +26,6 @@ func WordSet(text string, types string, ans string) int {
 		panic(err.Error())
 	}
 	defer db.Close()
-	//var ctx = context.Background()
-	//selectMessages, err := db.QueryContext(ctx, "INSERT INTO collections(message,types,answer) VALUES (?,?,?)", text,types)
 
 	segmenter := gothaiwordcut.Wordcut()
 	segmenter.LoadDefaultDict()
@@ -49,16 +49,10 @@ func WordSet(text string, types string, ans string) int {
 	}
 	_, err = insForm.Exec(text, types, ans, result, 0)
 	if err != nil {
-		//fmt.Print(text, types, ans, result)
 		return 0
 	}
 
 	num := test.Test(types)
-
-	//featuregreeting := test.Selectfeature("greeting")
-	//featureproblem := test.Selectfeature("problem")
-	//featureorders := test.Selectfeature("orders")
-	//featuresearch := test.Selectfeature("search")
 
 	if num == 0 {
 		return 0
@@ -67,36 +61,42 @@ func WordSet(text string, types string, ans string) int {
 	if num == 0 {
 		return 0
 	}
-	//
-	//greeting := 0
-	//problem := 0
-	//orders := 0
-	//search := 0
-	//
-	//for i := 0; i < len(res); i++ {
-	//
-	//	if test.Findfeaturesonebyone(res[i], featuregreeting) == 1 {
-	//		greeting++
-	//	}
-	//	if test.Findfeaturesonebyone(res[i], featureproblem) == 1 {
-	//		problem++
-	//	}
-	//	if test.Findfeaturesonebyone(res[i], featureorders) == 1 {
-	//		orders++
-	//	}
-	//	if test.Findfeaturesonebyone(res[i], featuresearch) == 1 {
-	//		search++
-	//	}
-	//}
-	//updateToFeatures, err := db.Prepare("UPDATE collections SET greeting=?,problem=?,orders=?,search=? WHERE message=?")
-	//if err != nil {
-	//	panic(err.Error())
-	//	return 0
-	//}
-	//updateToFeatures.Exec(greeting, problem, orders, search, text)
-
 	return 1
 
-	//INSERT INTO `collections` (`message`, `greeting`, `problem`, `orders`, `search`, `types`, `answer`, `id`, `sub_feature`) VALUES ('', '0', '0', '0', '0', NULL, '', NULL, NULL)
-
 }
+
+func WordCome(text string, Idcustomer string) (int,string) {
+		db, err := sql.Open("mysql", DATABASE)
+		if err != nil {
+			panic(err.Error())
+		}
+		defer db.Close()
+		var ctx = context.Background()
+		fmt.Println(text)
+		selectMessages, err := db.QueryContext(ctx, "SELECT answer FROM collections WHERE message=?",text)
+		//fmt.Println(selectMessages)
+		rawText :=""
+
+		for selectMessages.Next() {
+			var tag Tag
+			err = selectMessages.Scan(&tag.Feature)
+			if err != nil {
+				panic(err.Error())
+			}
+			rawText+=tag.Feature
+		}
+
+		if(strings.Compare(rawText,"")==0){
+			return 0,""
+		}else{
+			return 1, rawText
+		}
+
+	}
+
+
+
+
+
+
+

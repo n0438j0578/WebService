@@ -14,6 +14,7 @@ func main() {
 	api.GET("/findfeature", controller.FindFeature)
 	api.POST("/example", controller.Example)
 	api.POST("/test",controller.ExampleFindOneByOne)
+	api.POST("/wordcome",controller.WordCome)
 	gin.Run(":20000")
 
 }
