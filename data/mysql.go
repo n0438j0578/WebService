@@ -16,6 +16,7 @@ type Id struct {
 
 type Tag struct {
 	Feature string `json:"des"`
+	Count int
 }
 
 const DATABASE = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
@@ -72,28 +73,34 @@ func WordCome(text string, Idcustomer string) (int, string) {
 	}
 	defer db.Close()
 	var ctx = context.Background()
-	//fmt.Println(text)
-	selectMessages, err := db.QueryContext(ctx, "SELECT answer FROM collections WHERE message=?", text)
+	fmt.Println(text)
+	selectMessages, err := db.QueryContext(ctx, "SELECT answer,count FROM collections WHERE message=?", text)
+	fmt.Println(selectMessages)
 	rawText := ""
+	count :=1
 
 	for selectMessages.Next() {
 		var tag Tag
-		err = selectMessages.Scan(&tag.Feature)
+		err = selectMessages.Scan(&tag.Feature,&tag.Count)
 		if err != nil {
 			panic(err.Error())
 		}
 		rawText += tag.Feature
+		count = count +tag.Count
 	}
 
 	if (strings.Compare(rawText, "") == 0) {
 		SaveWord(text,Idcustomer)
 		return 0, ""
 	} else {
+		insForm, _ := db.Prepare("UPDATE collections SET count=? WHERE message=? ")
+		insForm.Exec(count, text)
 		SaveWord(text,Idcustomer)
 		return 1, rawText
 	}
 
 }
+
 func SaveWord(text string, Idcustomer string)  {
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
