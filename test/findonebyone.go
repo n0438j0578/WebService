@@ -222,7 +222,7 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 		}
 	}
 
-	//fmt.Println(greeting,problem,orders,search)
+	fmt.Println(greeting,problem,orders,search)
 
 
 	updateToFeatures, err := db.Prepare("UPDATE collections SET greeting=?,problem=?,orders=?,search=? WHERE  message=?")
