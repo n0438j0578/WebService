@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"math/rand"
 	"strings"
 
 	"github.com/narongdejsrn/go-thaiwordcut"
@@ -77,6 +78,7 @@ func WordCome(text string, Idcustomer string) (int, string) {
 	selectMessages, err := db.QueryContext(ctx, "SELECT answer,count FROM collections WHERE message=?", text)
 	//fmt.Println(selectMessages)
 	rawText := ""
+	rawtest:=""
 	count :=1
 
 	for selectMessages.Next() {
@@ -85,12 +87,32 @@ func WordCome(text string, Idcustomer string) (int, string) {
 		if err != nil {
 			panic(err.Error())
 		}
-		rawText += tag.Feature
+		rawtest += tag.Feature
 		count = count +tag.Count
 	}
-
+	//fmt.Println(rawText)
+	if (strings.Compare(rawtest, "") != 0){
+		cut := strings.Split(rawtest, ":;")
+		rawText = cut[rand.Intn(len(cut)-1)]
+		for ; ; {
+			if (strings.Compare(rawText, "") == 0) {
+				fmt.Println("เจอด้วยหรอวะ")
+				cut := strings.Split(rawtest, ":;")
+				rawText = cut[rand.Intn(len(cut)-1)]
+			} else {
+				break
+			}
+		}
+	}
 	if (strings.Compare(rawText, "") == 0) {
+
+		featuregreeting := test.Selectfeature("greeting")
+		featureproblem := test.Selectfeature("problem")
+		featureorders := test.Selectfeature("order")
+		featuresearch := test.Selectfeature("search")
 		SaveWord(text,Idcustomer)
+		rawText =test.TestoneByoneNormal(text,featuregreeting,featureproblem,featureorders,featuresearch)
+
 		return 0, ""
 	} else {
 		insForm, _ := db.Prepare("UPDATE collections SET count=? WHERE message=? ")

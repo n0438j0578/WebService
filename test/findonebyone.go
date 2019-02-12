@@ -1,9 +1,17 @@
 package test
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
+	"encoding/csv"
 	"fmt"
+	"github.com/joho/sqltocsv"
+	"io"
+	"math"
+	"os"
+	"sort"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -160,4 +168,323 @@ func Selectfeature(types string) []string {
 
 	return cut
 
+}
+func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []string, featureorders []string, featuresearch []string) string {
+	db, err := sql.Open("mysql", DATABASE)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+
+	segmenter := gothaiwordcut.Wordcut()
+	segmenter.LoadDefaultDict()
+	res := segmenter.Segment(input)
+
+	fmt.Print("Cutdata : ")
+	fmt.Println(res)
+
+	result := ""
+
+	for i := 0; i < len(res); i++ {
+		result += res[i] + " "
+	}
+	//
+	//fmt.Println(result,input)
+	//updateToFeatures, err := db.Prepare("INSERT INTO collections(message,sub_feature,answer,count) VALUES (?,?,?,?)")
+	//if err != nil {
+	//	panic(err.Error())
+	//	return ""
+	//}
+	////fmt.Println(updateToFeatures)
+	//_,err =updateToFeatures.Exec(input, result,"",0)
+
+	//fmt.Println(resa)
+
+	greeting := 0
+	problem := 0
+	orders := 0
+	search := 0
+
+	for i := 0; i < len(res); i++ {
+
+		if Findfeaturesonebyone(res[i], featuregreeting) == 1 {
+			greeting++
+		}
+		if Findfeaturesonebyone(res[i], featureproblem) == 1 {
+			problem++
+		}
+		if Findfeaturesonebyone(res[i], featureorders) == 1 {
+			orders++
+		}
+		if Findfeaturesonebyone(res[i], featuresearch) == 1 {
+			search++
+		}
+	}
+
+	//fmt.Println(greeting,problem,orders,search)
+
+
+	updateToFeatures, err := db.Prepare("UPDATE collections SET greeting=?,problem=?,orders=?,search=? WHERE  message=?")
+	if err != nil {
+		panic(err.Error())
+		return ""
+	}
+	updateToFeatures.Exec(greeting, problem, orders, search, input)
+
+	rows, _ := db.Query("SELECT greeting ,problem ,orders ,search,types  FROM collections")
+
+	err = sqltocsv.WriteFile("test/report.csv", rows)
+
+	//fname := `report.csv`
+	f, err := os.OpenFile("test/report.csv", os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	defer f.Close()
+	_, err = popLine(f)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	//fmt.Print("pop:", string(line))
+
+	if err != nil {
+		panic(err)
+	}else{
+		//fmt.Println("เสร็จแล้ว")
+	}
+
+	//เริ่มทำการ knn
+
+	irisMatrix := [][]string{}
+	iris, err := os.Open("test/report.csv")
+	if err != nil {
+		panic(err)
+	}
+	defer iris.Close()
+
+	reader := csv.NewReader(iris)
+	reader.Comma = ','
+	reader.LazyQuotes = true
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			panic(err)
+		}
+		irisMatrix = append(irisMatrix, record)
+	}
+
+	//split data into explaining and explained variables
+	X := [][]float64{}
+	Y := []string{}
+	for _, data := range irisMatrix {
+
+		//convert str slice data into float slice data
+		temp := []float64{}
+		for _, i := range data[:4] {
+			parsedValue, err := strconv.ParseFloat(i, 64)
+			if err != nil {
+				panic(err)
+			}
+			temp = append(temp, parsedValue)
+		}
+		//fmt.Println(temp)
+		//explaining variables
+		X = append(X, temp)
+		//explained variables
+		Y = append(Y, data[4])
+
+	}
+	//fmt.Println(X)
+	//fmt.Println(Y)
+
+
+	//split data into training and test
+	var (
+		trainX [][]float64
+		trainY []string
+		testX  [][]float64
+	)
+	for i, _ := range X {
+			trainX = append(trainX, X[i])
+			trainY = append(trainY, Y[i])
+
+	}
+
+	temp := []float64{float64(greeting),float64(problem),float64(orders),float64(search)}
+	//fmt.Println(temp)
+
+	testX = append(testX,temp)
+	//training
+	knn := KNN{}
+	knn.k = 4
+	knn.fit(trainX, trainY)
+
+	predicted := knn.predict(testX)
+
+	fmt.Println(predicted[0])
+	return ""
+
+
+}
+
+//calculate euclidean distance betwee two slices
+func Dist(source, dest []float64) float64 {
+	val := 0.0
+	for i, _ := range source {
+		val += math.Pow(source[i]-dest[i], 2)
+	}
+	return math.Sqrt(val)
+}
+
+//argument sort
+type Slice struct {
+	sort.Interface
+	idx []int
+}
+
+func (s Slice) Swap(i, j int) {
+	s.Interface.Swap(i, j)
+	s.idx[i], s.idx[j] = s.idx[j], s.idx[i]
+}
+
+func NewSlice(n sort.Interface) *Slice {
+	s := &Slice{Interface: n, idx: make([]int, n.Len())}
+	for i := range s.idx {
+		s.idx[i] = i
+	}
+	return s
+}
+
+func NewFloat64Slice(n []float64) *Slice { return NewSlice(sort.Float64Slice(n)) }
+
+//map sort
+type Entry struct {
+	name  string
+	value int
+}
+type List []Entry
+
+func (l List) Len() int {
+	return len(l)
+}
+
+func (l List) Swap(i, j int) {
+	l[i], l[j] = l[j], l[i]
+}
+
+func (l List) Less(i, j int) bool {
+	if l[i].value == l[j].value {
+		return l[i].name < l[j].name
+	} else {
+		return l[i].value > l[j].value
+	}
+}
+
+//count item frequence in slice
+func Counter(target []string) map[string]int {
+	counter := map[string]int{}
+	for _, elem := range target {
+		counter[elem] += 1
+	}
+	return counter
+}
+
+type KNN struct {
+	k      int
+	data   [][]float64
+	labels []string
+}
+
+func (knn *KNN) fit(X [][]float64, Y []string) {
+	//read data
+	knn.data = X
+	knn.labels = Y
+}
+
+func (knn *KNN) predict(X [][]float64) []string {
+
+	predictedLabel := []string{}
+	for _, source := range X {
+		var (
+			distList   []float64
+			nearLabels []string
+		)
+		//calculate distance between predict target data and surpervised data
+		for _, dest := range knn.data {
+			distList = append(distList, Dist(source, dest))
+		}
+		//take top k nearest item's index
+		s := NewFloat64Slice(distList)
+		sort.Sort(s)
+		targetIndex := s.idx[:knn.k]
+
+		//get the index's label
+		for _, ind := range targetIndex {
+			nearLabels = append(nearLabels, knn.labels[ind])
+		}
+
+		//get label frequency
+		labelFreq := Counter(nearLabels)
+
+		//the most frequent label is the predict target label
+		a := List{}
+		for k, v := range labelFreq {
+			e := Entry{k, v}
+			a = append(a, e)
+		}
+		sort.Sort(a)
+		predictedLabel = append(predictedLabel, a[0].name)
+	}
+	return predictedLabel
+
+}
+
+
+func popLine(f *os.File) ([]byte, error) {
+	fi, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+	buf := bytes.NewBuffer(make([]byte, 0, fi.Size()))
+
+	_, err = f.Seek(0, os.SEEK_SET)
+	if err != nil {
+		return nil, err
+	}
+	_, err = io.Copy(buf, f)
+	if err != nil {
+		return nil, err
+	}
+	line, err := buf.ReadString('\n')
+	if err != nil && err != io.EOF {
+		return nil, err
+	}
+
+	_, err = f.Seek(0, os.SEEK_SET)
+	if err != nil {
+		return nil, err
+	}
+	nw, err := io.Copy(f, buf)
+	if err != nil {
+		return nil, err
+	}
+	err = f.Truncate(nw)
+	if err != nil {
+		return nil, err
+	}
+	err = f.Sync()
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = f.Seek(0, os.SEEK_SET)
+	if err != nil {
+		return nil, err
+	}
+	return []byte(line), nil
 }

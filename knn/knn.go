@@ -13,7 +13,7 @@ import (
 func main() {
 	//read data
 	irisMatrix := [][]string{}
-	iris, err := os.Open("iris.csv")
+	iris, err := os.Open("test/report.csv")
 	if err != nil {
 		panic(err)
 	}
@@ -53,7 +53,8 @@ func main() {
 		Y = append(Y, data[4])
 
 	}
-
+	fmt.Println(X)
+	fmt.Println(Y)
 	//split data into training and test
 	var (
 		trainX [][]float64
@@ -70,6 +71,8 @@ func main() {
 			testY = append(testY, Y[i])
 		}
 	}
+
+	fmt.Println(trainX)
 
 	//training
 	knn := KNN{}

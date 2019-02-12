@@ -64,10 +64,42 @@ func main(){
 
 	rows, _ := db.Query("SELECT greeting ,problem ,orders ,search,types  FROM collections")
 
-	err = sqltocsv.WriteFile("./program/report.csv", rows)
+	err = sqltocsv.WriteFile("./test/report.csv", rows)
 
 	//fname := `report.csv`
-	f, err := os.OpenFile("./program/report.csv", os.O_RDWR|os.O_CREATE, 0666)
+	f, err := os.OpenFile("./test/report.csv", os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer f.Close()
+	line, err := popLine(f)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("pop:", string(line))
+
+	if err != nil {
+		panic(err)
+	}else{
+		fmt.Println("เสร็จแล้ว")
+	}
+
+}
+func SqltoCsv(){
+	db, err := sql.Open("mysql", controller.DATABASE)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	rows, _ := db.Query("SELECT greeting ,problem ,orders ,search,types  FROM collections")
+
+	err = sqltocsv.WriteFile("./knn/report.csv", rows)
+
+	//fname := `report.csv`
+	f, err := os.OpenFile("./knn/report.csv", os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		fmt.Println(err)
 		return
