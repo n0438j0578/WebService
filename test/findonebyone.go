@@ -189,17 +189,7 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	for i := 0; i < len(res); i++ {
 		result += res[i] + " "
 	}
-	//
-	//fmt.Println(result,input)
-	//updateToFeatures, err := db.Prepare("INSERT INTO collections(message,sub_feature,answer,count) VALUES (?,?,?,?)")
-	//if err != nil {
-	//	panic(err.Error())
-	//	return ""
-	//}
-	////fmt.Println(updateToFeatures)
-	//_,err =updateToFeatures.Exec(input, result,"",0)
 
-	//fmt.Println(resa)
 
 	greeting := 0
 	problem := 0
@@ -327,6 +317,12 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	predicted := knn.predict(testX)
 
 	fmt.Println(predicted[0])
+
+
+
+
+
+
 	return ""
 
 
