@@ -93,16 +93,23 @@ func WordCome(text string, Idcustomer string) (int, string) {
 	//fmt.Println(rawText)
 	if (strings.Compare(rawtest, "") != 0){
 		cut := strings.Split(rawtest, ":;")
-		rawText = cut[rand.Intn(len(cut)-1)]
-		for ; ; {
-			if (strings.Compare(rawText, "") == 0) {
-				fmt.Println("เจอด้วยหรอวะ")
-				cut := strings.Split(rawtest, ":;")
-				rawText = cut[rand.Intn(len(cut)-1)]
-			} else {
-				break
+		//fmt.Println(cut, len(cut))
+
+		if(len(cut)!=1){
+			rawText = cut[rand.Intn(len(cut)-1)]
+			for ; ; {
+				if (strings.Compare(rawText, "") == 0) {
+					fmt.Println("เจอด้วยหรอวะ")
+					cut := strings.Split(rawtest, ":;")
+					rawText = cut[rand.Intn(len(cut)-1)]
+				} else {
+					break
+				}
 			}
+		}else{
+			rawText = rawtest
 		}
+
 	}
 	if (strings.Compare(rawText, "") == 0) {
 
