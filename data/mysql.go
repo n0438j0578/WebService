@@ -119,8 +119,11 @@ func WordCome(text string, Idcustomer string) (int, string) {
 		featuresearch := test.Selectfeature("search")
 		SaveWord(text,Idcustomer)
 		rawText =test.TestoneByoneNormal(text,featuregreeting,featureproblem,featureorders,featuresearch)
-
-		return 2, rawText
+		if(strings.Compare(rawText,"")==0){
+			return 0,""
+		}else{
+			return 2, rawText
+		}
 	} else {
 		insForm, _ := db.Prepare("UPDATE collections SET count=? WHERE message=? ")
 		insForm.Exec(count, text)

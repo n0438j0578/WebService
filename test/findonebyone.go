@@ -212,6 +212,11 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 		}
 	}
 
+	boo :=(greeting==problem && greeting==orders && greeting==search)
+	if(boo){
+		return ""
+	}
+
 	fmt.Println(greeting,problem,orders,search)
 
 
