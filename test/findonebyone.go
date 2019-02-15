@@ -336,7 +336,7 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 		ans = ans+tag.Feature
 	}
 	rawText:=""
-	rawtest:=""
+	//rawtest:=""
 
 	//fmt.Println(rawText)
 	if (strings.Compare(ans, "") != 0){
@@ -354,7 +354,7 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 				}
 			}
 		}else{
-			rawText = rawtest
+			rawText = ans
 		}
 
 	}
