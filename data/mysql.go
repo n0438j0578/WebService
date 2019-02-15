@@ -111,6 +111,7 @@ func WordCome(text string, Idcustomer string) (int, string) {
 		}
 
 	}
+
 	if (strings.Compare(rawText, "") == 0) {
 
 		featuregreeting := test.Selectfeature("greeting")

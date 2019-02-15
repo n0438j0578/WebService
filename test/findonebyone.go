@@ -9,6 +9,7 @@ import (
 	"github.com/joho/sqltocsv"
 	"io"
 	"math"
+	"math/rand"
 	"os"
 	"sort"
 	"strconv"
@@ -334,19 +335,42 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 		}
 		ans = ans+tag.Feature
 	}
+	rawText:=""
+	rawtest:=""
+
+	//fmt.Println(rawText)
+	if (strings.Compare(ans, "") != 0){
+		cut := strings.Split(ans, ":;")
+		//fmt.Println(cut, len(cut))
+		if(len(cut)!=1){
+			rawText = cut[rand.Intn(len(cut)-1)]
+			for ; ; {
+				if (strings.Compare(rawText, "") == 0) {
+					fmt.Println("เจอด้วยหรอวะ")
+					cut := strings.Split(ans, ":;")
+					rawText = cut[rand.Intn(len(cut)-1)]
+				} else {
+					break
+				}
+			}
+		}else{
+			rawText = rawtest
+		}
+
+	}
 	fmt.Println(ans)
 	insForm, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count,greeting,problem,orders,search) VALUES (?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		panic(err.Error())
 	}
 	_, err = insForm.Exec(input, predicted[0], ans, result, 0,greeting,problem,orders,search)
+	fmt.Println(rawText)
 
 
 
 
 
-
-	return ans
+	return rawText
 
 
 }
