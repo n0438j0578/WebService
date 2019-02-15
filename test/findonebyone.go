@@ -317,13 +317,31 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	predicted := knn.predict(testX)
 
 	fmt.Println(predicted[0])
+	index :=questionMatching(input ,predicted[0])
+	ans:=""
+	var ctx = context.Background()
+	selectMessages, err := db.QueryContext(ctx, "SELECT answer FROM collections WHERE id=?", index)
+	for selectMessages.Next() {
+		var tag Tag
+		err = selectMessages.Scan(&tag.Feature)
+		if err != nil {
+			panic(err.Error())
+		}
+		ans = ans+tag.Feature
+	}
+	fmt.Println(ans)
+	insForm, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count,greeting,problem,orders,search) VALUES (?,?,?,?,?,?,?,?,?)")
+	if err != nil {
+		panic(err.Error())
+	}
+	_, err = insForm.Exec(input, predicted[0], ans, result, 0,greeting,problem,orders,search)
 
 
 
 
 
 
-	return ""
+	return ans
 
 
 }

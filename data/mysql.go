@@ -120,7 +120,7 @@ func WordCome(text string, Idcustomer string) (int, string) {
 		SaveWord(text,Idcustomer)
 		rawText =test.TestoneByoneNormal(text,featuregreeting,featureproblem,featureorders,featuresearch)
 
-		return 0, ""
+		return 2, rawText
 	} else {
 		insForm, _ := db.Prepare("UPDATE collections SET count=? WHERE message=? ")
 		insForm.Exec(count, text)

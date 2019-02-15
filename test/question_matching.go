@@ -1,4 +1,4 @@
-package main
+package test
 
 import (
 	"context"
@@ -19,8 +19,6 @@ type QuestionRow struct {
 	SubFeature string `json:"sub_feature"`
 	count int
 }
-
-const DATABASE  = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
 
 func questionMatching(msg string, strType string) int{
 
