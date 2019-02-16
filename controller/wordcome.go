@@ -3,7 +3,6 @@ package controller
 import (
 	"WebService/data"
 	"WebService/model"
-	"WebService/test"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -41,7 +40,7 @@ func WordCome(context *gin.Context) {
 		response.StatusMessage = "ไม่เจอข้อความแต่ตอบได้"
 		response.Result=answer
 		context.JSON(http.StatusOK, response)
-		test.TestAll()
+		//test.TestAll()
 	}else{
 		response.Status = "failed"
 		response.StatusMessage = "ไม่เจอข้อความ"
