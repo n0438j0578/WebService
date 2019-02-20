@@ -85,6 +85,8 @@ func questionMatching(msg string, strType string) int{
 	return randomId
 }
 
+
+
 func subFeature(str string) []string{
 
 	segmenter := gothaiwordcut.Wordcut()

@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "99d98859-2228-4a4d-a705-8e12ff21548e",
+		"name": "WebService",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "มีของไหม",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"text\": \"มี Maccaroni Cheese Spring Roll ไหม\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:20000/api/word",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20000",
+					"path": [
+						"api",
+						"word"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "หา features",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:20000/api/findfeature",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20000",
+					"path": [
+						"api",
+						"findfeature"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "เหลือไหม",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"text\": \"ASUS Dual-band Wireless-AC1200 router RT-AC1200G+ เหลือไหม\",\n  \"type\":\"greeting\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:20000/api/word",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20000",
+					"path": [
+						"api",
+						"word"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "กรณีไม่เข้ากับคำถามไหนเลย",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"text\": \"พิมไรมาก็ได้\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:20000/api/word",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20000",
+					"path": [
+						"api",
+						"word"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ยัดฟีเจอร์",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"value\": \"พิมไรมาก็ได้\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:20000/api/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20000",
+					"path": [
+						"api",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "wordset",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"text\": \"หวัดดีครับ\",\n  \"type\":\"greeting\",\n  \"answer\":\"สวัสดีค่ะ ยินดีต้อนรับค่ะเปิดใหม่ค่ะ\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:20000/api/wordset",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20000",
+					"path": [
+						"api",
+						"wordset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "รับคำจากเฟสบุค",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"idcustomer\": \"1234\",\n  \"text\": \"มี Maccaroni Cheese Spring Roll ไหม\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:20000/api/wordcome",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "20000",
+					"path": [
+						"api",
+						"wordcome"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ทดสอบการส่ง api get ที่ nodejs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://njmessengerbot.herokuapp.com/test/?id=1868064243272013&option=นักเดินเล่นผู้หลงทาง",
+					"protocol": "https",
+					"host": [
+						"njmessengerbot",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"test",
+						""
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1868064243272013"
+						},
+						{
+							"key": "option",
+							"value": "นักเดินเล่นผู้หลงทาง"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ทดสอบการส่ง api post ที่ nodejs",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Message\" : \"ทำการทดสอบ\",\n\t\"Id\": 1868064243272013\n}"
+				},
+				"url": {
+					"raw": "https://njmessengerbot.herokuapp.com/testpost",
+					"protocol": "https",
+					"host": [
+						"njmessengerbot",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"testpost"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"text\": \"D-Link\"\n}"
+				},
+				"url": {
+					"raw": "localhost:20000/api/product",
+					"host": [
+						"localhost"
+					],
+					"port": "20000",
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
