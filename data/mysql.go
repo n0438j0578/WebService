@@ -1,6 +1,7 @@
 package data
 
 import (
+	"WebService/model"
 	"WebService/test"
 	"context"
 	"database/sql"
@@ -67,7 +68,7 @@ func WordSet(text string, types string, ans string) int {
 
 }
 
-func WordCome(text string, Idcustomer string) (int, string) {
+func WordCome(text string, Idcustomer string) (int, string,[]model.ProductRow) {
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
 		panic(err.Error())
@@ -119,17 +120,20 @@ func WordCome(text string, Idcustomer string) (int, string) {
 		featureorders := test.Selectfeature("order")
 		featuresearch := test.Selectfeature("search")
 		SaveWord(text,Idcustomer)
-		rawText =test.TestoneByoneNormal(text,featuregreeting,featureproblem,featureorders,featuresearch)
-		if(strings.Compare(rawText,"")==0){
-			return 0,""
+		rawText,product :=test.TestoneByoneNormal(text,featuregreeting,featureproblem,featureorders,featuresearch)
+		if(len(product)>0){
+			return 3,"",product
+
+		} else if(strings.Compare(rawText,"")==0){
+			return 0,"",[]model.ProductRow{}
 		}else{
-			return 2, rawText
+			return 2, rawText,[]model.ProductRow{}
 		}
 	} else {
 		insForm, _ := db.Prepare("UPDATE collections SET count=? WHERE message=? ")
 		insForm.Exec(count, text)
 		SaveWord(text,Idcustomer)
-		return 1, rawText
+		return 1, rawText,[]model.ProductRow{}
 	}
 
 }

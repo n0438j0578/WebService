@@ -3,6 +3,7 @@ package controller
 import (
 	"WebService/data"
 	"WebService/model"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -14,7 +15,7 @@ func KnnTest(context *gin.Context) {
 	var response struct {
 		Status        string `json:",omitempty"` //"success | error | inactive"
 		StatusMessage string `json:",omitempty"`
-		Result string
+		Result        string
 	}
 	err := context.BindJSON(&request)
 
@@ -25,20 +26,18 @@ func KnnTest(context *gin.Context) {
 		return
 	}
 
+	result, answer, product := data.WordCome(request.Text, request.Idcustomer)
+	fmt.Println(product)
 
-
-	result,answer := data.WordCome(request.Text,request.Idcustomer)
-
-
-	if result ==1{
+	if result == 1 {
 		response.Status = "success"
 		response.StatusMessage = "เจอข้อความ"
-		response.Result=answer
+		response.Result = answer
 		context.JSON(http.StatusOK, response)
-	}else{
+	} else {
 		response.Status = "failed"
 		response.StatusMessage = "ไม่เจอข้อความ"
-		response.Result=""
+		response.Result = ""
 		context.JSON(http.StatusOK, response)
 	}
 }

@@ -43,16 +43,4 @@ func FindProduct(context *gin.Context) {
 	context.JSON(http.StatusOK, response)
 
 
-	//
-	//if result ==1{
-	//	response.Status = "success"
-	//	response.StatusMessage = "Insert example"
-	//	response.Result=request.Value
-	//	context.JSON(http.StatusOK, response)
-	//}else{
-	//	response.Status = "failed"
-	//	response.StatusMessage = "Insert example"
-	//	response.Result=request.Value
-	//	context.JSON(http.StatusOK, response)
-	//}
 }

@@ -1,6 +1,7 @@
 package test
 
 import (
+	"WebService/model"
 	"bytes"
 	"context"
 	"database/sql"
@@ -170,7 +171,7 @@ func Selectfeature(types string) []string {
 	return cut
 
 }
-func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []string, featureorders []string, featuresearch []string) string {
+func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []string, featureorders []string, featuresearch []string) (string,[]model.ProductRow) {
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
 		panic(err.Error())
@@ -215,7 +216,7 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 
 	boo :=(greeting==problem && greeting==orders && greeting==search)
 	if(boo){
-		return ""
+		return "",[]model.ProductRow{}
 	}
 
 	fmt.Println(greeting,problem,orders,search)
@@ -224,7 +225,7 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	updateToFeatures, err := db.Prepare("UPDATE collections SET greeting=?,problem=?,orders=?,search=? WHERE  message=?")
 	if err != nil {
 		panic(err.Error())
-		return ""
+		return "",[]model.ProductRow{}
 	}
 	updateToFeatures.Exec(greeting, problem, orders, search, input)
 
@@ -236,13 +237,13 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	f, err := os.OpenFile("test/report.csv", os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return "",[]model.ProductRow{}
 	}
 	defer f.Close()
 	_, err = popLine(f)
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return "",[]model.ProductRow{}
 	}
 	//fmt.Print("pop:", string(line))
 
@@ -323,54 +324,62 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	predicted := knn.predict(testX)
 
 	fmt.Println(predicted[0])
-	index :=questionMatching(input ,predicted[0])
-	ans:=""
-	var ctx = context.Background()
-	selectMessages, err := db.QueryContext(ctx, "SELECT answer FROM collections WHERE id=?", index)
-	for selectMessages.Next() {
-		var tag Tag
-		err = selectMessages.Scan(&tag.Feature)
+
+	if(strings.Compare(predicted[0],"search")==0){
+		product := ProductMatching(result)
+		return "",product
+	}else{
+
+		index :=questionMatching(input ,predicted[0])
+		ans:=""
+		var ctx = context.Background()
+		selectMessages, err := db.QueryContext(ctx, "SELECT answer FROM collections WHERE id=?", index)
+		for selectMessages.Next() {
+			var tag Tag
+			err = selectMessages.Scan(&tag.Feature)
+			if err != nil {
+				panic(err.Error())
+			}
+			ans = ans+tag.Feature
+		}
+		rawText:=""
+		//rawtest:=""
+
+		//fmt.Println(rawText)
+		if (strings.Compare(ans, "") != 0){
+			cut := strings.Split(ans, ":;")
+			//fmt.Println(cut, len(cut))
+			if(len(cut)!=1){
+				rawText = cut[rand.Intn(len(cut)-1)]
+				for ; ; {
+					if (strings.Compare(rawText, "") == 0) {
+						fmt.Println("เจอด้วยหรอวะ")
+						cut := strings.Split(ans, ":;")
+						rawText = cut[rand.Intn(len(cut)-1)]
+					} else {
+						break
+					}
+				}
+			}else{
+				rawText = ans
+			}
+
+		}
+		fmt.Println(ans)
+		insForm, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count,greeting,problem,orders,search) VALUES (?,?,?,?,?,?,?,?,?)")
 		if err != nil {
 			panic(err.Error())
 		}
-		ans = ans+tag.Feature
+		_, err = insForm.Exec(input, predicted[0], ans, result, 0,greeting,problem,orders,search)
+		fmt.Println(rawText)
+
+
+
+
+
+		return rawText,[]model.ProductRow{}
 	}
-	rawText:=""
-	//rawtest:=""
 
-	//fmt.Println(rawText)
-	if (strings.Compare(ans, "") != 0){
-		cut := strings.Split(ans, ":;")
-		//fmt.Println(cut, len(cut))
-		if(len(cut)!=1){
-			rawText = cut[rand.Intn(len(cut)-1)]
-			for ; ; {
-				if (strings.Compare(rawText, "") == 0) {
-					fmt.Println("เจอด้วยหรอวะ")
-					cut := strings.Split(ans, ":;")
-					rawText = cut[rand.Intn(len(cut)-1)]
-				} else {
-					break
-				}
-			}
-		}else{
-			rawText = ans
-		}
-
-	}
-	fmt.Println(ans)
-	insForm, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count,greeting,problem,orders,search) VALUES (?,?,?,?,?,?,?,?,?)")
-	if err != nil {
-		panic(err.Error())
-	}
-	_, err = insForm.Exec(input, predicted[0], ans, result, 0,greeting,problem,orders,search)
-	fmt.Println(rawText)
-
-
-
-
-
-	return rawText
 
 
 }
