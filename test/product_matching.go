@@ -23,7 +23,7 @@ func ProductMatching(msg string) []model.ProductRow{
 
 
 	//var ctx = context.Background()
-	selectMessages, err := db.Query( "SELECT name, des, img,id FROM menu")
+	selectMessages, err := db.Query( "SELECT name, des, img,id FROM menu WHERE amount>0")
 
 
 	for selectMessages.Next() {
@@ -54,6 +54,10 @@ func ProductMatching(msg string) []model.ProductRow{
 
 	max := minMax(product)
 	fmt.Println("Maximum count :"+strconv.Itoa(max))
+
+	if(max==0){
+		return []model.ProductRow{}
+	}
 
 	//var idSet []int
 	var result []model.ProductRow

@@ -124,7 +124,7 @@ func WordCome(text string, Idcustomer string) (int, string,[]model.ProductRow) {
 		if(len(product)>0){
 			return 3,"",product
 
-		} else if(strings.Compare(rawText,"")==0){
+		} else if(strings.Compare(rawText,"")==0||len(product)==0){
 			return 0,"",[]model.ProductRow{}
 		}else{
 			return 2, rawText,[]model.ProductRow{}

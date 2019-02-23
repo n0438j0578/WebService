@@ -124,15 +124,15 @@ func MinMax(array []QuestionRow) /*(int,*/ int/*)*/ {
 }
 
 
-func main() {
-	start := time.Now()
-	questionMatching("สวัสดี", "greeting")
-	//questionMatching("เจ้าเน็คไม่ได้", "problem")
-	//questionMatching("มีไหม", "search")
-	//questionMatching("อยากได้", "order")
-
-	fmt.Println()
-	elapsed := time.Since(start)
-	fmt.Print("Elapse time :")
-	fmt.Println(elapsed)
-}
+//func main() {
+//	start := time.Now()
+//	questionMatching("สวัสดี", "greeting")
+//	//questionMatching("เจ้าเน็คไม่ได้", "problem")
+//	//questionMatching("มีไหม", "search")
+//	//questionMatching("อยากได้", "order")
+//
+//	fmt.Println()
+//	elapsed := time.Since(start)
+//	fmt.Print("Elapse time :")
+//	fmt.Println(elapsed)
+//}

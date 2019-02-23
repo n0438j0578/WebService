@@ -31,7 +31,7 @@ func Test(strType string) int {
 			panic(err.Error())
 		}
 		//fmt.Println(tag.Des)
-		rawText+=tag.Feature
+		rawText+=tag.Feature +" "
 	}
 
 	fmt.Print("Rawdata : ")
