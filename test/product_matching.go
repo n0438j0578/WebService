@@ -71,6 +71,8 @@ func ProductMatching(msg string) []model.ProductRow{
 		}
 	}
 
+	fmt.Println("Result :"+result[0].Name)
+
 
 
 
