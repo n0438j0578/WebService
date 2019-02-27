@@ -20,6 +20,7 @@ type Tag struct {
 	Feature string `json:"des"`
 	Count int
 }
+//wwwwwww
 
 const DATABASE = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
 
