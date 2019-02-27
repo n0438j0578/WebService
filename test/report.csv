@@ -54,3 +54,8 @@
 0,0,0,18,search
 0,0,0,7,search
 0,0,0,12,search
+1,1,0,0,greeting
+10,5,1,0,greeting
+6,9,2,1,problem
+1,0,0,0,greeting
+2,1,1,1,greeting

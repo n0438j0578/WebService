@@ -3,6 +3,7 @@ package controller
 import (
 	"WebService/data"
 	"WebService/model"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -21,6 +22,8 @@ func WordCome(context *gin.Context) {
 	var product []model.ProductRow
 
 	result, answer, product := data.WordCome(request.Text, request.Idcustomer)
+
+	fmt.Println(answer)
 
 	if result == 1 {
 		var response struct {

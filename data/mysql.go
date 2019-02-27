@@ -121,12 +121,15 @@ func WordCome(text string, Idcustomer string) (int, string,[]model.ProductRow) {
 		featuresearch := test.Selectfeature("search")
 		SaveWord(text,Idcustomer)
 		rawText,product :=test.TestoneByoneNormal(text,featuregreeting,featureproblem,featureorders,featuresearch)
+		fmt.Println(rawText)
 		if(len(product)>0){
 			return 3,"",product
-
-		} else if(strings.Compare(rawText,"")==0||len(product)==0){
+		} else if(strings.Compare(rawText,"")!=0||len(product)==0){
+			return 2,rawText,[]model.ProductRow{}
+		}else if(strings.Compare(rawText,"")==0||len(product)==0){
 			return 0,"",[]model.ProductRow{}
 		}else{
+
 			return 2, rawText,[]model.ProductRow{}
 		}
 	} else {

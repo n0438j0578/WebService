@@ -377,7 +377,7 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 
 
 
-		return rawText,[]model.ProductRow{}
+		return ans,[]model.ProductRow{}
 	}
 
 
