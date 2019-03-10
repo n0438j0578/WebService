@@ -361,18 +361,18 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 					}
 				}
 			}else{
-				rawText = ans
+				cut := strings.Split(ans, ":;")
+				rawText = cut[0]
 			}
 
 		}
-		fmt.Println(ans)
+
 		insForm, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count,greeting,problem,orders,search) VALUES (?,?,?,?,?,?,?,?,?)")
 		if err != nil {
 			panic(err.Error())
 		}
 		_, err = insForm.Exec(input, predicted[0], ans, result, 0,greeting,problem,orders,search)
-		fmt.Println(rawText)
-
+		
 
 
 

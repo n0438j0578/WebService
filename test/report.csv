@@ -60,3 +60,9 @@
 1,0,0,0,greeting
 2,1,1,1,greeting
 2,1,0,0,greeting
+1,1,0,0,greeting
+2,0,0,0,greeting
+16,15,2,2,problem
+1,0,0,0,greeting
+0,0,0,1,greeting
+0,1,0,3,greeting
