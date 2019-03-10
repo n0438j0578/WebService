@@ -9,6 +9,7 @@ import (
 )
 
 func WordCome(context *gin.Context) {
+	//รับข้อความเข้ามาแล้วทำการส่งต่อ
 	var request struct {
 		*model.Word
 	}

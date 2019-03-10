@@ -5,6 +5,8 @@ import (
 	"WebService/test"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"runtime"
+	"sync"
 )
 
 func Example(context *gin.Context) {
@@ -55,6 +57,9 @@ func Example(context *gin.Context) {
 	}
 }
 func ExampleFindOneByOne(context *gin.Context) {
+	var mutex = &sync.Mutex{}
+	mutex.Lock()
+	runtime.GOMAXPROCS(1)
 	var request struct {
 		*model.Example
 	}
@@ -78,6 +83,7 @@ func ExampleFindOneByOne(context *gin.Context) {
 
 	//result:= test.TestoneByone(5)
 
+	mutex.Unlock()
 	if result ==1{
 		response.Status = "success"
 		response.StatusMessage = "Insert example"

@@ -18,9 +18,9 @@ type Id struct {
 
 type Tag struct {
 	Feature string `json:"des"`
-	Count int
+	Count   int
 }
-//wwwwwww
+
 
 const DATABASE = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
 
@@ -69,7 +69,9 @@ func WordSet(text string, types string, ans string) int {
 
 }
 
-func WordCome(text string, Idcustomer string) (int, string,[]model.ProductRow) {
+func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) {
+
+	//ทำการต่อฐานข้อมูล
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
 		panic(err.Error())
@@ -80,24 +82,23 @@ func WordCome(text string, Idcustomer string) (int, string,[]model.ProductRow) {
 	selectMessages, err := db.QueryContext(ctx, "SELECT answer,count FROM collections WHERE message=?", text)
 	//fmt.Println(selectMessages)
 	rawText := ""
-	rawtest:=""
-	count :=1
+	rawtest := ""
+	count := 1
 
 	for selectMessages.Next() {
 		var tag Tag
-		err = selectMessages.Scan(&tag.Feature,&tag.Count)
+		err = selectMessages.Scan(&tag.Feature, &tag.Count)
 		if err != nil {
 			panic(err.Error())
 		}
 		rawtest += tag.Feature
-		count = count +tag.Count
+		count = count + tag.Count
 	}
-	//fmt.Println(rawText)
-	if (strings.Compare(rawtest, "") != 0){
+	//ถ้าเจอว่าเป็นคำตอบที่มีอยู่แล้ว และให้ตัดคำนั้นออกมา
+	if (strings.Compare(rawtest, "") != 0) {
 		cut := strings.Split(rawtest, ":;")
-		//fmt.Println(cut, len(cut))
-
-		if(len(cut)!=1){
+		//ลูบนี้จะเช็คประมานว่าถ้าตัดแล้วเจอข้อความเปล่าๆ ให้มันแรนดอมเอาใหม่อีกครั้ง
+		if (len(cut) != 1) {
 			rawText = cut[rand.Intn(len(cut)-1)]
 			for ; ; {
 				if (strings.Compare(rawText, "") == 0) {
@@ -108,41 +109,49 @@ func WordCome(text string, Idcustomer string) (int, string,[]model.ProductRow) {
 					break
 				}
 			}
-		}else{
+		} else {
 			rawText = rawtest
 		}
 
 	}
-
+	//ถ้าไม่เจอ
 	if (strings.Compare(rawText, "") == 0) {
-
+		//ทำการหาความถี่แต่ละตัวแล้วเอาไปเข้าฟังชั่น
 		featuregreeting := test.Selectfeature("greeting")
 		featureproblem := test.Selectfeature("problem")
 		featureorders := test.Selectfeature("order")
 		featuresearch := test.Selectfeature("search")
-		SaveWord(text,Idcustomer)
-		rawText,product :=test.TestoneByoneNormal(text,featuregreeting,featureproblem,featureorders,featuresearch)
-		fmt.Println(rawText)
-		if(len(product)>0){
-			return 3,"",product
-		} else if(strings.Compare(rawText,"")!=0||len(product)==0){
-			return 2,rawText,[]model.ProductRow{}
-		}else if(strings.Compare(rawText,"")==0||len(product)==0){
-			return 0,"",[]model.ProductRow{}
-		}else{
 
-			return 2, rawText,[]model.ProductRow{}
+		//เซฟว่าผู้ใช้คนนี้เคยส่งอะไรมา
+		SaveWord(text, Idcustomer)
+
+		rawText, product := test.TestoneByoneNormal(text, featuregreeting, featureproblem, featureorders, featuresearch)
+		fmt.Println(rawText)
+
+		if (len(product) > 0) {
+			//ถ้าเจอของ
+			return 3, "", product
+		} else if (strings.Compare(rawText, "") != 0 || len(product) == 0) {
+			//ไม่เจอของแต่ว่าเป็นข้อความที่สามารถตอบกลับไปได้
+			return 2, rawText, []model.ProductRow{}
+		} else if (strings.Compare(rawText, "") == 0 || len(product) == 0) {
+			//ไม่เจออะไรทั้งนั้น
+			return 0, "", []model.ProductRow{}
+		} else {
+
+			return 2, rawText, []model.ProductRow{}
 		}
 	} else {
+		//เจอข้อความแล้วให้เซฟแล้วค่อยรีเทินออกไปว่าเจอ
 		insForm, _ := db.Prepare("UPDATE collections SET count=? WHERE message=? ")
 		insForm.Exec(count, text)
-		SaveWord(text,Idcustomer)
-		return 1, rawText,[]model.ProductRow{}
+		SaveWord(text, Idcustomer)
+		return 1, rawText, []model.ProductRow{}
 	}
 
 }
 
-func SaveWord(text string, Idcustomer string)  {
+func SaveWord(text string, Idcustomer string) {
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
 		panic(err.Error())
