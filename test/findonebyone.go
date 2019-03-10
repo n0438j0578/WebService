@@ -348,7 +348,8 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 		//fmt.Println(rawText)
 		if (strings.Compare(ans, "") != 0){
 			cut := strings.Split(ans, ":;")
-			//fmt.Println(cut, len(cut))
+
+			fmt.Println(cut, len(cut))
 			if(len(cut)!=1){
 				rawText = cut[rand.Intn(len(cut)-1)]
 				for ; ; {
@@ -363,6 +364,8 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 			}else{
 				cut := strings.Split(ans, ":;")
 				rawText = cut[0]
+				//ans = rawText
+				fmt.Println(rawText)
 			}
 
 		}
@@ -372,12 +375,12 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 			panic(err.Error())
 		}
 		_, err = insForm.Exec(input, predicted[0], ans, result, 0,greeting,problem,orders,search)
-		
 
 
 
 
-		return ans,[]model.ProductRow{}
+
+		return rawText,[]model.ProductRow{}
 	}
 
 
