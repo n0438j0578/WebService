@@ -131,14 +131,14 @@ func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) 
 		if (len(product) > 0) {
 			//ถ้าเจอของ
 			return 3, "", product
-		} else if (strings.Compare(rawText, "") != 0 || len(product) == 0) {
+		} else if (strings.Compare(rawText, "") != 0 &&len(product) == 0) {
 			//ไม่เจอของแต่ว่าเป็นข้อความที่สามารถตอบกลับไปได้
 			return 2, rawText, []model.ProductRow{}
 		} else if (strings.Compare(rawText, "") == 0 || len(product) == 0) {
 			//ไม่เจออะไรทั้งนั้น
 			return 0, "", []model.ProductRow{}
 		} else {
-
+			fmt.Println("Test")
 			return 2, rawText, []model.ProductRow{}
 		}
 	} else {
