@@ -2,12 +2,14 @@ package main
 
 import (
 	"WebService/controller"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 
 func main() {
 	gin:=gin.Default()
+	gin.Use(cors.Default())
 	api := gin.Group("/api")
 	api.POST("/word", controller.Word)
 	api.POST("/wordset", controller.WordSet)
