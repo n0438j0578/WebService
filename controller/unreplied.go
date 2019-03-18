@@ -37,7 +37,7 @@ func Unreplied (con *gin.Context) {
 
 
 
-	response.Status = "Success!"
+	response.Status = "Success"
 	con.JSON(http.StatusOK, response)
 
 

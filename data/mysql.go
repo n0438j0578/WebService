@@ -94,7 +94,7 @@ func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) 
 		rawtest += tag.Feature
 		count = count + tag.Count
 	}
-	//ถ้าเจอว่าเป็นคำตอบที่มีอยู่แล้ว และให้ตัดคำนั้นออกมา
+	//fmt.Println(rawtest)
 	if (strings.Compare(rawtest, "") != 0) {
 		cut := strings.Split(rawtest, ":;")
 		//ลูบนี้จะเช็คประมานว่าถ้าตัดแล้วเจอข้อความเปล่าๆ ให้มันแรนดอมเอาใหม่อีกครั้ง
@@ -111,9 +111,14 @@ func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) 
 			}
 		} else {
 			rawText = rawtest
+
 		}
 
 	}
+	cutstopword := test.CutStopWord(text)
+
+
+
 	//ถ้าไม่เจอ
 	if (strings.Compare(rawText, "") == 0) {
 		//ทำการหาความถี่แต่ละตัวแล้วเอาไปเข้าฟังชั่น
@@ -125,7 +130,7 @@ func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) 
 		//เซฟว่าผู้ใช้คนนี้เคยส่งอะไรมา
 		SaveWord(text, Idcustomer)
 
-		rawText, product := test.TestoneByoneNormal(text, featuregreeting, featureproblem, featureorders, featuresearch)
+		rawText, product := test.TestoneByoneNormal(cutstopword, featuregreeting, featureproblem, featureorders, featuresearch)
 		fmt.Println(rawText)
 
 		if (len(product) > 0) {
