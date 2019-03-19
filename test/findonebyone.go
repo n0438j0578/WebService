@@ -7,7 +7,6 @@ import (
 	"database/sql"
 	"encoding/csv"
 	"fmt"
-	"github.com/joho/sqltocsv"
 	"io"
 	"math"
 	"math/rand"
@@ -16,6 +15,8 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/joho/sqltocsv"
 
 	gothaiwordcut "github.com/narongdejsrn/go-thaiwordcut"
 )
@@ -171,7 +172,7 @@ func Selectfeature(types string) []string {
 	return cut
 
 }
-func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []string, featureorders []string, featuresearch []string) (string,[]model.ProductRow) {
+func TestoneByoneNormal(input string, featuregreeting []string, featureproblem []string, featureorders []string, featuresearch []string) (string, []model.ProductRow) {
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
 		panic(err.Error())
@@ -192,7 +193,6 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	for i := 0; i < len(res); i++ {
 		result += res[i] + " "
 	}
-
 
 	greeting := 0
 	problem := 0
@@ -215,18 +215,17 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 		}
 	}
 
-	boo :=(greeting==problem && greeting==orders && greeting==search)
-	if(boo){
-		return "",[]model.ProductRow{}
+	boo := (greeting == problem && greeting == orders && greeting == search)
+	if boo {
+		return "", []model.ProductRow{}
 	}
 
-	fmt.Println(greeting,problem,orders,search)
-
+	fmt.Println(greeting, problem, orders, search)
 
 	updateToFeatures, err := db.Prepare("UPDATE collections SET greeting=?,problem=?,orders=?,search=? WHERE  message=?")
 	if err != nil {
 		panic(err.Error())
-		return "",[]model.ProductRow{}
+		return "", []model.ProductRow{}
 	}
 	updateToFeatures.Exec(greeting, problem, orders, search, input)
 
@@ -238,19 +237,19 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	f, err := os.OpenFile("test/report.csv", os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		fmt.Println(err)
-		return "",[]model.ProductRow{}
+		return "", []model.ProductRow{}
 	}
 	defer f.Close()
 	_, err = popLine(f)
 	if err != nil {
 		fmt.Println(err)
-		return "",[]model.ProductRow{}
+		return "", []model.ProductRow{}
 	}
 	//fmt.Print("pop:", string(line))
 
 	if err != nil {
 		panic(err)
-	}else{
+	} else {
 		//fmt.Println("เสร็จแล้ว")
 	}
 
@@ -300,7 +299,6 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	//fmt.Println(X)
 	//fmt.Println(Y)
 
-
 	//split data into training and test
 	var (
 		trainX [][]float64
@@ -308,31 +306,31 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 		testX  [][]float64
 	)
 	for i, _ := range X {
-			trainX = append(trainX, X[i])
-			trainY = append(trainY, Y[i])
+		trainX = append(trainX, X[i])
+		trainY = append(trainY, Y[i])
 
 	}
 
-	temp := []float64{float64(greeting),float64(problem),float64(orders),float64(search)}
+	temp := []float64{float64(greeting), float64(problem), float64(orders), float64(search)}
 	//fmt.Println(temp)
 
-	testX = append(testX,temp)
+	testX = append(testX, temp)
 	//training
 	knn := KNN{}
-	knn.k = 3
+	knn.k = 2
 	knn.fit(trainX, trainY)
 
 	predicted := knn.predict(testX)
 
 	fmt.Println(predicted[0])
 
-	if(strings.Compare(predicted[0],"search")==0){
+	if strings.Compare(predicted[0], "search") == 0 {
 		product := ProductMatching(result)
-		return "",product
-	}else{
+		return "", product
+	} else {
 
-		index :=questionMatching(input ,predicted[0])
-		ans:=""
+		index := questionMatching(input, predicted[0])
+		ans := ""
 		var ctx = context.Background()
 		selectMessages, err := db.QueryContext(ctx, "SELECT answer FROM collections WHERE id=?", index)
 		for selectMessages.Next() {
@@ -341,20 +339,20 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 			if err != nil {
 				panic(err.Error())
 			}
-			ans = ans+tag.Feature
+			ans = ans + tag.Feature
 		}
-		rawText:=""
+		rawText := ""
 		//rawtest:=""
 
 		//fmt.Println(rawText)
-		if (strings.Compare(ans, "") != 0){
+		if strings.Compare(ans, "") != 0 {
 			cut := strings.Split(ans, ":;")
 
 			fmt.Println(cut, len(cut))
-			if(len(cut)!=1){
+			if len(cut) != 1 {
 				rawText = cut[rand.Intn(len(cut)-1)]
-				for ; ; {
-					if (strings.Compare(rawText, "") == 0) {
+				for {
+					if strings.Compare(rawText, "") == 0 {
 						fmt.Println("เจอด้วยหรอวะ")
 						cut := strings.Split(ans, ":;")
 						rawText = cut[rand.Intn(len(cut)-1)]
@@ -362,7 +360,7 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 						break
 					}
 				}
-			}else{
+			} else {
 				cut := strings.Split(ans, ":;")
 				rawText = cut[0]
 				//ans = rawText
@@ -375,16 +373,10 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 		if err != nil {
 			panic(err.Error())
 		}
-		_, err = insForm.Exec(input, predicted[0], ans, result, 0,greeting,problem,orders,search)
+		_, err = insForm.Exec(input, predicted[0], ans, result, 0, greeting, problem, orders, search)
 
-
-
-
-
-		return rawText,[]model.ProductRow{}
+		return rawText, []model.ProductRow{}
 	}
-
-
 
 }
 
@@ -499,7 +491,6 @@ func (knn *KNN) predict(X [][]float64) []string {
 	return predictedLabel
 
 }
-
 
 func popLine(f *os.File) ([]byte, error) {
 	fi, err := f.Stat()
