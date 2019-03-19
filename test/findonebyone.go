@@ -317,7 +317,7 @@ func TestoneByoneNormal(input string, featuregreeting []string, featureproblem [
 	testX = append(testX, temp)
 	//training
 	knn := KNN{}
-	knn.k = 2
+	knn.k = 3
 	knn.fit(trainX, trainY)
 
 	predicted := knn.predict(testX)
