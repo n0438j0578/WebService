@@ -50,7 +50,7 @@ func CutStopWord(text string)string   {
 	//fmt.Println(result)
 	real:=""
 	for i:=0;i< len(result);i++  {
-		real=real +result[i]
+		real=real +result[i] +" "
 	}
 
 	return real

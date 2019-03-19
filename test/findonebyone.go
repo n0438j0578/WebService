@@ -178,6 +178,7 @@ func TestoneByoneNormal(input string,featuregreeting []string, featureproblem []
 	}
 	defer db.Close()
 
+	fmt.Println(input)
 
 	segmenter := gothaiwordcut.Wordcut()
 	segmenter.LoadDefaultDict()

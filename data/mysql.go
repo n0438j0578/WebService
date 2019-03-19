@@ -31,6 +31,8 @@ func WordSet(text string, types string, ans string) int {
 	}
 	defer db.Close()
 
+	text =strings.ToLower(text)
+
 	segmenter := gothaiwordcut.Wordcut()
 	segmenter.LoadDefaultDict()
 	res := segmenter.Segment(text)
@@ -71,6 +73,7 @@ func WordSet(text string, types string, ans string) int {
 
 func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) {
 
+	text =strings.ToLower(text)
 	//ทำการต่อฐานข้อมูล
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
