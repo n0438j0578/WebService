@@ -3,6 +3,7 @@ package controller
 import (
 	"WebService/data"
 	"WebService/model"
+	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -62,6 +63,14 @@ func WordCome(context *gin.Context) {
 			StatusMessage string `json:",omitempty"`
 			Result        string
 		}
+		db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+		if err != nil {
+			panic(err.Error())
+		}
+		defer db.Close()
+		insForm, _ := db.Prepare("UPDATE oldmsg SET status=? WHERE id=? ")
+		insForm.Exec(0, request.Idcustomer	)
+
 		response.Status = "failed"
 		response.StatusMessage = "ไม่เจอข้อความ"
 		response.Result = ""
