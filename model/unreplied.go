@@ -1,6 +1,6 @@
 package model
 
 type Unreplied struct {
-	ID int `json:"id"`
+	ID string `json:"id"`
 	Msg string `json:"message"`
 }
