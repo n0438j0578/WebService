@@ -104,6 +104,7 @@ func WordCosine(input string) (string, []model.ProductRow) {
 
 	//ถ้ามันไม่เจอเลย
 	if answer.Cosine==0.50{
+		fmt.Println("กรณีไม่เจอคำตอบเลยเพราะว่าค่า cosine น้อยเกินไปตอนนี้ให้เป็น 0.50")
 		return  "", []model.ProductRow{}
 	}else{
 

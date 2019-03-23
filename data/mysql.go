@@ -225,7 +225,7 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 		insForm.Exec(count, text)
 
 		//ส่งข้อความกลับไป ถ้ากรณีแรกคือ 1 คือเจอเลย
-		fmt.Println("กรณีที่ 1 :เจอข้อความในฐานข้อมูล")
+		fmt.Println("กรณีที่เจอข้อความในฐานข้อมูล")
 		return 1, rawText, []model.ProductRow{}
 	} else {
 		//ในกรณีที่ไม่เจอ
