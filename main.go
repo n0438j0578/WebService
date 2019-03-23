@@ -17,8 +17,10 @@ func main() {
 	api.POST("/example", controller.Example)
 	api.POST("/test",controller.ExampleFindOneByOne)
 	api.POST("/wordcome",controller.WordCome)
+	api.POST("/wordcomecosine",controller.WordComeCosine)
 	api.POST("product",controller.FindProduct)
 	api.GET("/unrepiled", controller.Unreplied)
+
 	//api.POST("knntest",controller.KnnTest)
 	gin.Run(":20000")
 

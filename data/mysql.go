@@ -21,7 +21,6 @@ type Tag struct {
 	Count   int
 }
 
-
 const DATABASE = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
 
 func WordSet(text string, types string, ans string) int {
@@ -31,7 +30,7 @@ func WordSet(text string, types string, ans string) int {
 	}
 	defer db.Close()
 
-	text =strings.ToLower(text)
+	text = strings.ToLower(text)
 
 	segmenter := gothaiwordcut.Wordcut()
 	segmenter.LoadDefaultDict()
@@ -73,7 +72,7 @@ func WordSet(text string, types string, ans string) int {
 
 func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) {
 
-	text =strings.ToLower(text)
+	text = strings.ToLower(text)
 	//ทำการต่อฐานข้อมูล
 	db, err := sql.Open("mysql", DATABASE)
 	if err != nil {
@@ -120,8 +119,6 @@ func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) 
 	}
 	cutstopword := test.CutStopWord(text)
 
-
-
 	//ถ้าไม่เจอ
 	if (strings.Compare(rawText, "") == 0) {
 		//ทำการหาความถี่แต่ละตัวแล้วเอาไปเข้าฟังชั่น
@@ -139,7 +136,7 @@ func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) 
 		if (len(product) > 0) {
 			//ถ้าเจอของ
 			return 3, "", product
-		} else if (strings.Compare(rawText, "") != 0 &&len(product) == 0) {
+		} else if (strings.Compare(rawText, "") != 0 && len(product) == 0) {
 			//ไม่เจอของแต่ว่าเป็นข้อความที่สามารถตอบกลับไปได้
 			return 2, rawText, []model.ProductRow{}
 		} else if (strings.Compare(rawText, "") == 0 || len(product) == 0) {
@@ -155,6 +152,105 @@ func WordCome(text string, Idcustomer string) (int, string, []model.ProductRow) 
 		insForm.Exec(count, text)
 		SaveWord(text, Idcustomer)
 		return 1, rawText, []model.ProductRow{}
+	}
+
+}
+
+func WordComeCosine(text string, Idcustomer string) (int, string, []model.ProductRow) {
+	//ทำการโชว์ข้อความที่เข้ามาพร้อมเลขผู้ใช้
+	fmt.Println("ผู้ใช้เลขที่ :",Idcustomer)
+	fmt.Println("ข้อความ :",text)
+
+	//ให้มันทำเป็นตัวเล็กให้หมดก่อน
+	text = strings.ToLower(text)
+
+	//เซฟข้อความก่อนหน้าแล้วก็เซฟเลขไอดีของผู้ใช้เฟสบุคด้วย
+	SaveWord(text, Idcustomer)
+
+	//ทำการต่อฐานข้อมูล
+	db, err := sql.Open("mysql", DATABASE)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	//เหมือนเป็นตัวแปรเอาไว้ใช้ในการใส่ฐานข้อมูลโดยสามารถส่งผ่านตัวแปรได้
+	var ctx = context.Background()
+
+	//ทำการลองดูว่าข้อความที่ได้ทำการเข้ามานั้นเคยเข้ามาหรือยัง ถ้าเคยแล้วเราจะสามารถเช็คได้แล้วให้ส่งผลกลับไปเลย
+	selectMessages, err := db.QueryContext(ctx, "SELECT answer,count FROM collections WHERE message=?", text)
+
+	//ข้อความเอาไว้ส่ง
+	rawText := ""
+	//ข้อความที่รับเข้ามาจากฐานข้อมูล
+	rawtest := ""
+	//เอาไว้บวกกับจำนวนครั้งถ้าเจอเลยแบบข้างล่าง
+	count := 1
+
+	for selectMessages.Next() {
+		var tag Tag
+		err = selectMessages.Scan(&tag.Feature, &tag.Count)
+		if err != nil {
+			panic(err.Error())
+		}
+		rawtest += tag.Feature
+		count = count + tag.Count
+	}
+
+	//ถ้าเจอ สตริงมันจะต้องไม่ว่าง แล้วเราก็ต้องเอาตัดมาเลือกด้วย
+	if (strings.Compare(rawtest, "") != 0) {
+
+		cut := strings.Split(rawtest, ":;")
+
+		//ถ้าขนาดไม่เท่ากับหนึ่งแปลว่ามีหลายคำตอบ
+
+		if (len(cut) != 1) {
+			rawText = cut[rand.Intn(len(cut)-1)]
+			for ; ; {
+				//ลูบนี้จะเช็คประมานว่าถ้าตัดแล้วเจอข้อความเปล่าๆ ให้มันแรนดอมเอาใหม่อีกครั้ง
+				if strings.Compare(rawText, "") == 0 {
+					cut := strings.Split(rawtest, ":;")
+					rawText = cut[rand.Intn(len(cut)-1)]
+				} else {
+					break
+				}
+			}
+		} else {
+			rawText = rawtest
+		}
+
+		//ทำการเพิ่มจำนวนการเรียกใช้ของคำถามนี้
+		insForm, _ := db.Prepare("UPDATE collections SET count=? WHERE message=? ")
+		insForm.Exec(count, text)
+
+		//ส่งข้อความกลับไป ถ้ากรณีแรกคือ 1 คือเจอเลย
+		fmt.Println("กรณีที่ 1 :เจอข้อความในฐานข้อมูล")
+		return 1, rawText, []model.ProductRow{}
+	} else {
+		//ในกรณีที่ไม่เจอ
+		fmt.Println("ไม่เจอข้อความกำลังเข้าสู่กระบวนการหาคำตอบ...")
+
+		//ทำการตัดคำที่ไม่จำเป็นเช่น ครับ ค่ะ จะเก็บไว้ที่ test/stopword.txt
+		text := test.CutStopWord(text)
+		fmt.Println("ข้อความหลังการตัด Stop Word :​ ",text)
+
+
+
+		rawText, product := test.WordCosine(text)
+
+		if (len(product) > 0) {
+			//ถ้าเจอของ
+			return 3, "", product
+		} else if (strings.Compare(rawText, "") != 0 && len(product) == 0) {
+			//ไม่เจอของแต่ว่าเป็นข้อความที่สามารถตอบกลับไปได้
+			return 2, rawText, []model.ProductRow{}
+		} else if (strings.Compare(rawText, "") == 0 || len(product) == 0) {
+			//ไม่เจออะไรทั้งนั้น
+			return 0, "", []model.ProductRow{}
+		} else {
+			fmt.Println("Test")
+			return 2, rawText, []model.ProductRow{}
+		}
 	}
 
 }

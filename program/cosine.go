@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
@@ -23,6 +24,7 @@ func main() {
 		panic(err.Error())
 	}
 	defer db.Close()
+
 	insert, err := db.Query("SELECT message,id FROM collections")
 	rawText := []string{}
 
@@ -80,4 +82,23 @@ func main() {
 	}
 
 	fmt.Println(answer)
+
+	//เหมือนเป็นตัวแปรเอาไว้ใช้ในการใส่ฐานข้อมูลโดยสามารถส่งผ่านตัวแปรได้
+	var ctx = context.Background()
+
+	//เอาชนิดของข้อความนั้นออกมาดูว่าเป็นเกี่ยวกับ search หรือเปล่าเพราะต้องเอาออกไปเป็นคาลูเซล
+	selectMessages, err := db.QueryContext(ctx, "SELECT types,answer FROM collections WHERE id=?", answer.Id)
+
+	var types string
+	var answerindata string
+	for selectMessages.Next() {
+		err = selectMessages.Scan(&types,&answerindata)
+		if err != nil {
+			panic(err.Error())
+		}
+		fmt.Println(types,answerindata)
+
+	}
+
+
 }
