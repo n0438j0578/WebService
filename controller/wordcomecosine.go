@@ -4,7 +4,6 @@ import (
 	"WebService/data"
 	"WebService/model"
 	"database/sql"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -25,7 +24,7 @@ func WordComeCosine(context *gin.Context) {
 
 	result, answer, product := data.WordComeCosine(request.Text, request.Idcustomer)
 
-	fmt.Println(answer)
+	//fmt.Println(answer)
 
 	if result == 1 {
 		var response struct {

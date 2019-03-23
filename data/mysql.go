@@ -160,6 +160,7 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 	//ทำการโชว์ข้อความที่เข้ามาพร้อมเลขผู้ใช้
 	fmt.Println("ผู้ใช้เลขที่ :",Idcustomer)
 	fmt.Println("ข้อความ :",text)
+	fmt.Println()
 
 	//ให้มันทำเป็นตัวเล็กให้หมดก่อน
 	text = strings.ToLower(text)
@@ -229,10 +230,12 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 	} else {
 		//ในกรณีที่ไม่เจอ
 		fmt.Println("ไม่เจอข้อความกำลังเข้าสู่กระบวนการหาคำตอบ...")
+		fmt.Println()
 
 		//ทำการตัดคำที่ไม่จำเป็นเช่น ครับ ค่ะ จะเก็บไว้ที่ test/stopword.txt
 		text := test.CutStopWord(text)
 		fmt.Println("ข้อความหลังการตัด Stop Word :​ ",text)
+		fmt.Println()
 
 
 
@@ -262,7 +265,7 @@ func SaveWord(text string, Idcustomer string) {
 	}
 	defer db.Close()
 	var ctx = context.Background()
-	fmt.Println(text)
+	//fmt.Println(text)
 	selectMessages, err := db.QueryContext(ctx, "SELECT message FROM oldmsg WHERE id=?", Idcustomer)
 	rawText := ""
 
