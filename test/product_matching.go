@@ -11,6 +11,7 @@ import (
 func ProductMatching(msg string) []model.ProductRow {
 
 	msgFeatures := subFeature(msg)
+	fmt.Println(msgFeatures)
 
 	product := []model.ProductRow{}
 
@@ -33,6 +34,11 @@ func ProductMatching(msg string) []model.ProductRow {
 		}
 		pro.Name = strings.ToLower(pro.Name)
 
+		//cut product description
+		pro.Des = strings.Join(subFeature(pro.Des), " ")
+		fmt.Print("Product Description after cut :")
+		fmt.Println(pro.Des)
+
 		product = append(product, pro)
 	}
 
@@ -40,9 +46,10 @@ func ProductMatching(msg string) []model.ProductRow {
 
 	for i := 0; i < len(msgFeatures); i++ {
 		for j := 0; j < len(product); j++ {
-			if strings.Contains(product[j].Name, msgFeatures[i]) {
+			nameAndDes := product[j].Name+" "+product[j].Des
+			if strings.Contains(nameAndDes, strings.ToLower(msgFeatures[i])) {
 				product[j].Count++
-				//fmt.Println("product= "+product[j].SubFeature+" ,ID= "+strconv.Itoa(product[j].ID)+" , msgFeature= "+msgFeatures[i])
+				fmt.Println("product= "+product[j].Name+" ,ID= "+strconv.Itoa(product[j].ID)+" , msgFeature= "+msgFeatures[i])
 			}
 
 		}
@@ -68,7 +75,9 @@ func ProductMatching(msg string) []model.ProductRow {
 		}
 	}
 
-	fmt.Println("Result :" + result[0].Name)
+	for _, res := range result{
+		fmt.Println("Result :" + res.Name)
+	}
 
 	return result
 }
