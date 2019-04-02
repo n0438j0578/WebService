@@ -44,9 +44,11 @@ func ProductMatching(msg string) []model.ProductRow {
 
 	//fmt.Println(product)
 
+
+
 	for i := 0; i < len(msgFeatures); i++ {
 		for j := 0; j < len(product); j++ {
-			nameAndDes := product[j].Name+" "+product[j].Des
+			nameAndDes := product[j].Name+" "+strings.ToLower(product[j].Des)
 			if strings.Contains(nameAndDes, strings.ToLower(msgFeatures[i])) {
 				product[j].Count++
 				fmt.Println("product= "+product[j].Name+" ,ID= "+strconv.Itoa(product[j].ID)+" , msgFeature= "+msgFeatures[i])
