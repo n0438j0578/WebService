@@ -177,7 +177,7 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 	if validID.MatchString(text){
 		//ส่งข้อความกลับไป ถ้ากรณีแรกคือ 1 คือเจอเลย
 		answer := test.ProductCal(text)
-		//fmt.Println("กรณีที่เจอข้อความในฐานข้อมูล")
+		fmt.Println("กรณีเป็นรูปแบบการสั่งค้าทำการส่งข้อความแสดงรายละเอียดจำนวนสินค้าและราคาทั้งหมด")
 		return 1, answer, []model.ProductRow{}
 
 	}else {

@@ -3,7 +3,6 @@ package test
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -11,8 +10,6 @@ import (
 func ProductCal(msg string) string {
 
 	cut :=strings.Split(msg,":")
-
-	//product := []model.ProductRow{}
 
 	db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
 	if err != nil {
@@ -34,12 +31,16 @@ func ProductCal(msg string) string {
 		if err != nil {
 			panic(err.Error())
 		}
+		//แปลงตัวคุณจำนวนสินค้ากับราคา
 		count,_ := strconv.ParseFloat(cut[1], 64)
 		price := count*pro.Price
-		answer := "ชื่อสินค้า : "+pro.Name+"\n"+"เป็นจำนวน : "+cut[1]+"\n"+"ราคารวมทั้งหมด"+fmt.Sprintf("%f", price)
+
+		cutprice := strings.Split(strconv.FormatFloat(price, 'f', -1, 64),".")
+
+		answer := "ชื่อสินค้า : "+pro.Name+"\n"+"เป็นจำนวน : "+cut[1]+"\n"+"ราคารวมทั้งหมด "+cutprice[0]
 		return answer
 	}
-	return ""
+	return "ไม่มีสินค้าอยู่ในระบบหรือสินค้าหมด"
 
 
 }
