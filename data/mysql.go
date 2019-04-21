@@ -58,15 +58,15 @@ func WordSet(text string, types string, ans string) int {
 		return 0
 	}
 
-	num := test.Test(types)
-
-	if num == 0 {
-		return 0
-	}
-	num = test.TestAll()
-	if num == 0 {
-		return 0
-	}
+	//num := test.Test(types)
+	//
+	//if num == 0 {
+	//	return 0
+	//}
+	//num = test.TestAll()
+	//if num == 0 {
+	//	return 0
+	//}
 	return 1
 
 }
