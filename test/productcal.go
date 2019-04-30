@@ -51,7 +51,7 @@ func ProductCal(msg string, Idcustomer string) string {
 			rawText += tag.Feature
 		}
 
-		insForm, _ := db.Prepare("UPDATE orderold SET message=? WHERE id=? ")
+		insForm, _ := db.Prepare("UPDATE oldmsg SET orderold=? WHERE id=? ")
 		insForm.Exec(answer, Idcustomer)
 
 		return answer
