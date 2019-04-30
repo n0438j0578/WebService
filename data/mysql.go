@@ -173,10 +173,24 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 
 	var validID = regexp.MustCompile(`[0-9]:[0-9]`)
 
+	//ทำการเช็คว่่าเข้าสู่กรณีออเดอร์ซ้ำเหมือนเดิมไหม
+	segmenter := gothaiwordcut.Wordcut()
+	segmenter.LoadDefaultDict()
+
+	var checkrepeat = segmenter.Segment(text)
+
+	for i:=0;i< len(checkrepeat);i++  {
+		if(test.CheckRepeat(checkrepeat[i])){
+			fmt.Println("เป็นเข้าสู่กรณีออเดอร์ซ้ำเหมือนเดิม")
+			return 1,test.SendRepeat(Idcustomer),[]model.ProductRow{}
+		}
+	}
+
+
 	//ถ้าเข้าเงื่อนไข โปรแกรมจะรับไปคำนวนและคืนผลลัพธ์ที่เป็นข้อความแสดงรายละเอียดจำนวนสินค้าและราคาทั้งหมด
 	if validID.MatchString(text){
 		//ส่งข้อความกลับไป ถ้ากรณีแรกคือ 1 คือเจอเลย
-		answer := test.ProductCal(text)
+		answer := test.ProductCal(text,Idcustomer)
 		fmt.Println("กรณีเป็นรูปแบบการสั่งค้าทำการส่งข้อความแสดงรายละเอียดจำนวนสินค้าและราคาทั้งหมด")
 		return 1, answer, []model.ProductRow{}
 
