@@ -8,8 +8,7 @@ import (
 )
 
 func ProductCal(msg string, Idcustomer string) string {
-
-	cut := strings.Split(msg, ":")
+	cut := strings.Fields(msg)
 
 	db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
 	if err != nil {
@@ -18,7 +17,7 @@ func ProductCal(msg string, Idcustomer string) string {
 	defer db.Close()
 
 	var ctx = context.Background()
-	selectMessages, err := db.QueryContext(ctx, "SELECT name, price FROM menu WHERE amount>0 AND id=?", cut[0])
+	selectMessages, err := db.QueryContext(ctx, "SELECT name, price FROM menu WHERE amount>0 AND id=? AND amount>=?", cut[0],cut[2])
 
 	for selectMessages.Next() {
 		type Product struct {

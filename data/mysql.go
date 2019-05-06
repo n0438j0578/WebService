@@ -171,7 +171,7 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 
 	//ทำการเช็ค ตัวแปรว่าเข้ามาโดยเป็นการสั่งซื้อสินค้าหรือไม่ โดยใช้ regular expression
 
-	var validID = regexp.MustCompile(`[0-9]:[0-9]`)
+	var validID = regexp.MustCompile(`[0-9]\s*\.*\**\\*\t*\n*\r*:\s*\.*\**\\*\t*\n*\r*[0-9]`)
 
 	//ทำการเช็คว่่าเข้าสู่กรณีออเดอร์ซ้ำเหมือนเดิมไหม
 	segmenter := gothaiwordcut.Wordcut()
