@@ -22,6 +22,8 @@ func main() {
 	api.POST("product",controller.FindProduct)
 	api.GET("/unrepiled", controller.Unreplied)
 
+	api.POST("/addproduct",controller.AddProduct)
+
 	//api.POST("knntest",controller.KnnTest)
 	gin.Run(":20000")
 

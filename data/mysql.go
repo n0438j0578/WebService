@@ -315,3 +315,23 @@ func SaveWord(text string, Idcustomer string) {
 	}
 
 }
+
+func AddProduct(name string, des string) int {
+	db, err := sql.Open("mysql", DATABASE)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	addname, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count) VALUES (?,?,?,?,?)")
+	_, err = addname.Exec(name, "search","test","",0)
+
+	adddes, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count) VALUES (?,?,?,?,?)")
+	_, err = adddes.Exec(des, "search","test","",0)
+
+	if err != nil {
+		return -1
+	}else{
+		return 1
+	}
+}
