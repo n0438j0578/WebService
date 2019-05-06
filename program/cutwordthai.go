@@ -18,10 +18,11 @@ func main() {
 
 	fmt.Println(validID.MatchString("123				:  123123"))
 
-	words := strings.Fields("123				:  123123")
+	words := strings.Fields("123:123123")
 	for i:=0;i< len(words);i++  {
 		fmt.Println(words[i])
 	}
+	fmt.Println(strings.Split("123				:  123123",":"))
 }
 
 
