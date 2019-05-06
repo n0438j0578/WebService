@@ -22,7 +22,7 @@ func main() {
 	for i:=0;i< len(words);i++  {
 		fmt.Println(words[i])
 	}
-	fmt.Println(strings.Split("123				:  123123",":"))
+	fmt.Println(len(strings.Split("123				:  123123", ":")))
 }
 
 

@@ -10,8 +10,16 @@ import (
 func ProductCal(msg string, Idcustomer string) string {
 	text := strings.Fields(msg)
 	var cut [2]string
-	cut[0]= text[0]
-	cut[1] =text[2]
+
+	if(len(text)==1){
+		txt :=strings.Split("msg", ":")
+		cut[0]=txt[0]
+		cut[1]=txt[1]
+	}else{
+		cut[0]= text[0]
+		cut[1] =text[2]
+	}
+
 	db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
 	if err != nil {
 		panic(err.Error())
@@ -19,7 +27,7 @@ func ProductCal(msg string, Idcustomer string) string {
 	defer db.Close()
 
 	var ctx = context.Background()
-	selectMessages, err := db.QueryContext(ctx, "SELECT name, price FROM menu WHERE amount>0 AND id=? AND amount>?", cut[0],cut[1])
+	selectMessages, err := db.QueryContext(ctx, "SELECT name, price FROM menu WHERE amount>0 AND id=? AND amount>=?", cut[0],cut[1])
 
 	for selectMessages.Next() {
 		type Product struct {
