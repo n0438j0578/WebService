@@ -160,12 +160,17 @@ func WordCosine(input string) (string, []model.ProductRow) {
 				rawText = answerindata
 			}
 
-			insForm, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count,greeting,problem,orders,search) VALUES (?,?,?,?,?,?,?,?,?)")
+			insForm, err := db.Prepare("INSERT INTO collections(message,types,answer,sub_feature,count) VALUES (?,?,?,?,?)")
 			if err != nil {
 				panic(err.Error())
 			}
 			//result คือข้อความที่ตัดแล้วดูที่ บรรทัด 71
-			_, err = insForm.Exec(input, types, answerindata, result, 0, 0, 0, 0, 0)
+			check :=strings.Split(input, " ")
+			test:=""
+			for i:=0;i< len(check);i++  {
+				test+=check[i]
+			}
+			_, err = insForm.Exec(test, types, answerindata, input, 0)
 
 			return rawText, []model.ProductRow{}
 		}
