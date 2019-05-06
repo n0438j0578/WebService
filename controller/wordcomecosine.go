@@ -56,6 +56,16 @@ func WordComeCosine(context *gin.Context) {
 		response.StatusMessage = "search"
 		response.Product = product
 		context.JSON(http.StatusOK, response)
+	}else if (result == 4) {
+		var response struct {
+			Status        string `json:",omitempty"` //"success | error | inactive"
+			StatusMessage string `json:",omitempty"`
+			Product       []model.ProductRow
+		}
+		response.Status = "success bank"
+		response.StatusMessage = "search"
+		response.Product = product
+		context.JSON(http.StatusOK, response)
 	} else {
 		var response struct {
 			Status        string `json:",omitempty"` //"success | error | inactive"

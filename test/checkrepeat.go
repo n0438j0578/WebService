@@ -3,29 +3,48 @@ package test
 import (
 	"context"
 	"database/sql"
-	"fmt"
-	"io/ioutil"
+	"encoding/csv"
+	"github.com/narongdejsrn/go-thaiwordcut"
+	"io"
+	"os"
 	"strings"
 )
 
-func CheckRepeat(input string) bool {
-	dat, err := ioutil.ReadFile("program/ignoreWord.txt")
+func CheckRepeat(text string) bool {
+	segmenter := gothaiwordcut.Wordcut()
+	segmenter.LoadDefaultDict()
+	input := segmenter.Segment(text)
+	stopword := []string{}
+	file, err := os.Open("test/ignoreWord.txt")
 	if err != nil {
-		fmt.Print(err)
+		panic(err)
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	reader.Comma = ','
+	reader.LazyQuotes = true
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			panic(err)
+		}
+		stopword = record
 	}
 
-	str := string(dat)
-	fmt.Println(str)
-	fmt.Println()
 
-	fmt.Print("Result : ")
-	if strings.Contains(str, input) {
-		fmt.Println("Matched")
-		return true
-	} else {
-		fmt.Println("Not match")
-		return false
+
+	for i:=0;i< len(input);i++  {
+		for j:=0;j<len(stopword);j++ {
+			if(strings.Compare(input[i],stopword[j])==0){
+				return true
+			}
+		}
+
 	}
+	return false
 
 
 

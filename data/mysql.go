@@ -188,7 +188,11 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 
 
 	//ถ้าเข้าเงื่อนไข โปรแกรมจะรับไปคำนวนและคืนผลลัพธ์ที่เป็นข้อความแสดงรายละเอียดจำนวนสินค้าและราคาทั้งหมด
-	if validID.MatchString(text){
+	if test.CheckBank(text){
+		fmt.Println("เป็นกรณีธนาคาร")
+		return 4,"เป็นกรณีธนาคาร",[]model.ProductRow{}
+
+	}else if validID.MatchString(text){
 		//ส่งข้อความกลับไป ถ้ากรณีแรกคือ 1 คือเจอเลย
 		answer := test.ProductCal(text,Idcustomer)
 		fmt.Println("กรณีเป็นรูปแบบการสั่งค้าทำการส่งข้อความแสดงรายละเอียดจำนวนสินค้าและราคาทั้งหมด")
