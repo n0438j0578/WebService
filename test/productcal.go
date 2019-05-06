@@ -12,7 +12,7 @@ func ProductCal(msg string, Idcustomer string) string {
 	var cut [2]string
 
 	if(len(text)==1){
-		txt :=strings.Split("msg", ":")
+		txt :=strings.Split(msg, ":")
 		cut[0]=txt[0]
 		cut[1]=txt[1]
 	}else{
