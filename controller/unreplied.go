@@ -16,7 +16,7 @@ func Unreplied (con *gin.Context) {
 		Result	      []model.Unreplied
 	}
 
-	db, err := sql.Open("mysql", "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
+	db, err := sql.Open("mysql", "root:n0438@j0578@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
 	if err != nil {
 		panic(err.Error())
 	}
