@@ -22,7 +22,7 @@ type Tag struct {
 	Count   int
 }
 
-const DATABASE = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
+const DATABASE = "root:n0438@j0578@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
 
 func WordSet(text string, types string, ans string) int {
 	db, err := sql.Open("mysql", DATABASE)

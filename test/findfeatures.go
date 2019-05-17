@@ -12,7 +12,7 @@ type Tag struct {
 	Feature string `json:"des"`
 }
 
-const DATABASE  = "root:P@ssword@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
+const DATABASE  = "root:n0438@j0578@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8"
 
 func Test(strType string) int {
 	db, err := sql.Open("mysql", DATABASE)
