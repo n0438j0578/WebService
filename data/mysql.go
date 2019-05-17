@@ -312,8 +312,8 @@ func SaveWord(text string, Idcustomer string) {
 	}
 
 	if (strings.Compare(rawText, "") == 0) {
-		insForm, _ := db.Prepare("INSERT INTO oldmsg(id,message) VALUES (?,?)")
-		_, err = insForm.Exec(Idcustomer, text)
+		insForm, _ := db.Prepare("INSERT INTO oldmsg(id,message,orderold) VALUES (?,?,?)")
+		_, err = insForm.Exec(Idcustomer, text,"")
 	} else {
 		insForm, _ := db.Prepare("UPDATE oldmsg SET message=? WHERE id=? ")
 		insForm.Exec(text, Idcustomer)
