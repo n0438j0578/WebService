@@ -280,6 +280,7 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 				return 2, rawText, []model.ProductRow{}
 			} else if (strings.Compare(rawText, "") == 0 || len(product) == 0) {
 				//ไม่เจออะไรทั้งนั้น
+				fmt.Println("ชิบหายแล้วววว")
 				return 0, "", []model.ProductRow{}
 			} else {
 				fmt.Println("Test")
