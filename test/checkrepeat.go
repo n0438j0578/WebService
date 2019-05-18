@@ -75,7 +75,7 @@ func SendRepeat(Idcustomer string) string {
 		}
 	}
 	if (strings.Compare(rawText, "") != 0) {
-		return rawText
+		return ProductCal(rawText,Idcustomer)
 	}else{
 		return "ลูกค้าไม่เคยทำการสั่งสินค้าจากร้านค้า"
 	}
