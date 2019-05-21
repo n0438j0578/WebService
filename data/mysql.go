@@ -200,7 +200,11 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 		//ส่งข้อความกลับไป ถ้ากรณีแรกคือ 1 คือเจอเลย
 		answer := test.ProductCal(text,Idcustomer)
 		fmt.Println("กรณีเป็นรูปแบบการสั่งค้าทำการส่งข้อความแสดงรายละเอียดจำนวนสินค้าและราคาทั้งหมด")
-		return 5, answer, []model.ProductRow{}
+		if(strings.Compare("ไม่มีสินค้าอยู่ในระบบหรือสินค้าหมด",answer)==0){
+			return 1,answer,[]model.ProductRow{}
+		}else {
+			return 5, answer, []model.ProductRow{}
+		}
 
 	}else {
 		//ถ้าไม้เข้าเงื่อนไข
