@@ -82,18 +82,17 @@ func ProductCal(msg string, Idcustomer string) string {
 }
 
 func ProductCalTransfer(msg string, Idcustomer string) string {
-	text := strings.Fields(msg)
+	reg, _ := regexp.Compile("[^0-9:]+")
+
+
+	processedString := reg.ReplaceAllString(msg, "")
+
+	txt :=strings.Split(processedString, ":")
 	var cut [2]string
 
-	if(len(text)==1){
-		txt :=strings.Split(msg, ":")
-		cut[0]=txt[0]
-		cut[1]=txt[1]
-	}else{
-		cut[0]= text[0]
-		cut[1] =text[2]
-	}
-
+	cut[0]=txt[0]
+	cut[1]=txt[1]
+	
 	db, err := sql.Open("mysql", "root:n0438@j0578@tcp(35.220.204.174:3306)/N&N_Cafe?charset=utf8")
 	if err != nil {
 		panic(err.Error())
