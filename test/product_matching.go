@@ -42,6 +42,8 @@ func ProductMatching(msg string) []model.ProductRow {
 		fmt.Print(pro.Name)
 		fmt.Print("")
 		fmt.Println(pro.Des)
+		fmt.Print(" ID: ")
+		fmt.Print(pro.ID)
 
 		product = append(product, pro)
 	}
