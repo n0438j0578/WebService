@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 func ProductCal(msg string, Idcustomer string) string {
@@ -81,7 +82,11 @@ func ProductCal(msg string, Idcustomer string) string {
 
 }
 
+var mutex sync.Mutex
+
 func ProductCalTransfer(msg string, Idcustomer string) string {
+	mutex.Lock()
+	defer mutex.Unlock()
 	reg, _ := regexp.Compile("[^0-9:]+")
 
 
@@ -119,7 +124,7 @@ func ProductCalTransfer(msg string, Idcustomer string) string {
 		insForm, _ := db.Prepare("UPDATE product SET amount= amount - ? WHERE id=? ")
 		insForm.Exec(cut[1], cut[0])
 
-		return "ขอบคุณที่ใช้บริการ ไว้มาอุดหนุนอีกนะคะ:)"
+		return "ขอบคุณที่ใช้บริการ ไว้มาอุดหนุนอีกนะคะ :)"
 	}
 	return "ไม่มีสินค้าอยู่ในระบบหรือสินค้าหมด"
 
