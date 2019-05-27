@@ -62,7 +62,7 @@ func Word(context *gin.Context) {
 
 		var tag Tag
 
-	//	err = db.QueryRow("SELECT amount,id FROM menu WHERE name=?", name).Scan(&tag.Amount,&tag.ID)
+	//	err = db.QueryRow("SELECT amount,id FROM product WHERE name=?", name).Scan(&tag.Amount,&tag.ID)
 		err = db.QueryRow("SELECT msg FROM oldmsg WHERE id=?", request.Idcustomer).Scan(&tag.msg)
 
 		text :=strings.Split(tag.msg, " ")
@@ -174,7 +174,7 @@ func Word(context *gin.Context) {
 			////SELECT * FROM Customers
 			////WHERE Country='Mexico';
 			//
-			//insert, err := db.QueryContext(ctx,"SELECT amount FROM menu WHERE name='?'",test)
+			//insert, err := db.QueryContext(ctx,"SELECT amount FROM product WHERE name='?'",test)
 			//err = insert.Scan(&tag.Amount)
 			//rawText := "ตอนนี้เหลือ "+tag.Amount
 			//
@@ -244,7 +244,7 @@ func Word(context *gin.Context) {
 
 		var tag Tag
 
-		err = db.QueryRow("SELECT amount,id FROM menu WHERE name=?", name).Scan(&tag.Amount,&tag.ID)
+		err = db.QueryRow("SELECT amount,id FROM product WHERE name=?", name).Scan(&tag.Amount,&tag.ID)
 
 		amount := tag.Amount
 		//fmt.Println(tag.Amount)

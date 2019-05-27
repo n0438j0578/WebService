@@ -22,7 +22,7 @@ func main() {
 		panic(err.Error())
 	}
 	defer db.Close()
-	insert, err := db.Query("SELECT des FROM menu")
+	insert, err := db.Query("SELECT des FROM product")
 	rawText :=""
 
 	for insert.Next() {

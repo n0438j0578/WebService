@@ -39,7 +39,7 @@ func ProductCal(msg string, Idcustomer string) string {
 	defer db.Close()
 
 	var ctx = context.Background()
-	selectMessages, err := db.QueryContext(ctx, "SELECT name, price FROM menu WHERE amount>0 AND id=? AND amount>=?", cut[0],cut[1])
+	selectMessages, err := db.QueryContext(ctx, "SELECT name, price FROM product WHERE amount>0 AND id=? AND amount>=?", cut[0],cut[1])
 
 	for selectMessages.Next() {
 		type Product struct {
@@ -100,7 +100,7 @@ func ProductCalTransfer(msg string, Idcustomer string) string {
 	defer db.Close()
 
 	var ctx = context.Background()
-	selectMessages, err := db.QueryContext(ctx, "SELECT name, price FROM menu WHERE amount>0 AND id=? AND amount>=?", cut[0],cut[1])
+	selectMessages, err := db.QueryContext(ctx, "SELECT name, price FROM product WHERE amount>0 AND id=? AND amount>=?", cut[0],cut[1])
 
 	for selectMessages.Next() {
 		type Product struct {
@@ -116,7 +116,7 @@ func ProductCalTransfer(msg string, Idcustomer string) string {
 
 		//UPDATE Orders SET Quantity = Quantity + 1 WHERE
 
-		insForm, _ := db.Prepare("UPDATE menu SET amount= amount - ? WHERE id=? ")
+		insForm, _ := db.Prepare("UPDATE product SET amount= amount - ? WHERE id=? ")
 		insForm.Exec(cut[1], cut[0])
 
 		return "ขอบคุณที่ใช้บริการ ไว้มาอุดหนุนอีกนะคะ:)"

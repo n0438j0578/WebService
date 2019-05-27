@@ -22,7 +22,7 @@ func ProductMatching(msg string) []model.ProductRow {
 	defer db.Close()
 
 	//var ctx = context.Background()
-	selectMessages, err := db.Query("SELECT name, des, img,id FROM menu WHERE amount>0")
+	selectMessages, err := db.Query("SELECT name, des, img,id FROM product WHERE amount>0")
 
 	for selectMessages.Next() {
 
