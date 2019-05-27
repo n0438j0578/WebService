@@ -34,9 +34,13 @@ func ProductMatching(msg string) []model.ProductRow {
 		}
 		pro.Name = strings.ToLower(pro.Name)
 
+		//pro.ID = strconv.Atoi(pro.ID)
+
 		//cut product description
 		pro.Des = strings.Join(subFeature(pro.Des), " ")
 		fmt.Print("Product Description after cut :")
+		fmt.Print(pro.Name)
+		fmt.Print("")
 		fmt.Println(pro.Des)
 
 		product = append(product, pro)
@@ -48,7 +52,7 @@ func ProductMatching(msg string) []model.ProductRow {
 
 	for i := 0; i < len(msgFeatures); i++ {
 		for j := 0; j < len(product); j++ {
-			nameAndDes := product[j].Name+" "+strings.ToLower(product[j].Des)
+			nameAndDes := product[j].Name+" "+strings.ToLower(product[j].Des+" "+strconv.Itoa(product[j].ID))
 			if strings.Contains(nameAndDes, strings.ToLower(msgFeatures[i])) {
 				product[j].Count++
 				fmt.Println("product= "+product[j].Name+" ,ID= "+strconv.Itoa(product[j].ID)+" , msgFeature= "+msgFeatures[i])
