@@ -164,7 +164,7 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 	fmt.Println()
 
 
-	if(strings.Compare(text,"โอนเงิน")==0){
+	if(strings.Compare(text,"จำลองการโอนเงิน")==0){
 		return 1,test.SendTransfer(Idcustomer),[]model.ProductRow{}
 	}else{
 	//ให้มันทำเป็นตัวเล็กให้หมดก่อน
