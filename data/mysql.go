@@ -164,7 +164,7 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 	fmt.Println()
 
 
-	if(strings.Compare(text,"จำลองการโอนเงิน")==0){
+	if(strings.Compare(text,"โอนเงิน")==0){
 		return 1,test.SendTransfer(Idcustomer),[]model.ProductRow{}
 	}else{
 	//ให้มันทำเป็นตัวเล็กให้หมดก่อน
@@ -288,10 +288,10 @@ func WordComeCosine(text string, Idcustomer string) (int, string, []model.Produc
 				return 2, rawText, []model.ProductRow{}
 			} else if (strings.Compare(rawText, "") == 0 || len(product) == 0) {
 				//ไม่เจออะไรทั้งนั้น
-				fmt.Println("ชิบหายแล้วววว")
+				//fmt.Println("ชิบหายแล้วววว")
 				return 0, "", []model.ProductRow{}
 			} else {
-				fmt.Println("Test")
+				//fmt.Println("Test")
 				return 2, rawText, []model.ProductRow{}
 			}
 		}
